@@ -14,6 +14,41 @@ const SignUp = () => {
             setShowBtn(true)
         }
     }
+    const formSubmit = e => {
+        let error = [];
+        e.preventDefault();
+        const password = e.target.password.value;
+        const email = e.target.email.value;
+        const username = e.target.username.value;
+        const file = e.target.file.files[0];
+        console.log(password,email,username,file)
+        // const passwordLength = /.{6,}/;
+        // const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
+        // const uppercase = /[A-Z]/;
+        // if (!passwordLength.test(password)) {
+        //     error = [...error,'Password should be at least 6 characters long']
+        // }
+
+        // if (!specialCharacter.test(password)) {
+        //     error = [...error,'Password should contain at least one special character']
+        // }
+
+        // if (!uppercase.test(password)) {
+        //     error = [...error,'Password should contain at least one uppercase letter']
+        // }
+        // if (error.length>0) {
+        //    const msg = error[0]
+        //    Swal.fire(
+        //     'opps!!',
+        //     `${msg}`,
+        //     'error'
+        //   )
+            
+        // }else{
+        //     signupuser(password,email,username)
+        // }
+    };
+
     return (
         <div className='bg-black bg-opacity-5 py-8'>
             <div class="container mx-auto max-w-3xl">
@@ -26,28 +61,28 @@ const SignUp = () => {
                 </p>
                 {/* <!-- End Title --> */}
                 {/* <!-- Form --> */}
-                <form>
+                <form onSubmit={formSubmit}>
                     <div class="mb-4">
-                        <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">name</span></label>
-                        <input type="text" id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="name" required/>
+                        <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">username</span></label>
+                        <input type="text" name='username' id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="username" required/>
                     </div>
                     <div class="mb-4">
                         <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">Email address</span></label>
-                        <input type="email" id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Email address" required />
+                        <input type="email" name='email' id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Email address" required />
                     </div>
 
                     <div class="mb-4">
                         <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white relative"><span class="sr-only">Password</span>
-                        <input type="password" id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required/>
+                        <input type="password" name='password' id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required/>
                         <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
                     </div>
                     <div class="mb-4">
                     <label for="profile-pic">Choose Profile Pic:</label>
-                        <input type="file" id="profile-pic" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" required/>
+                        <input type="file" name='file' id="profile-pic" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" required/>
                     </div>
 
                     <div class="grid">
-                        <button type="submit" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">login</button>
+                        <button type="submit" class="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">sign up</button>
                     </div>
                 </form>
                 <p className='my-2 font-semibold'>allready have an account ? <Link className=' text-blue-800' to={'/login'}>login</Link></p>
