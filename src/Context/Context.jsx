@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut ,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import app from "../Firebase/Firebase";
 export const FoodWaveData = createContext(null)
 const auth = getAuth(app);
@@ -15,6 +15,12 @@ const Context = ({ children }) => {
     // login uer
     const loginUser = (email, password) => {
         return signInWithEmailAndPassword(auth, email, password)
+    }
+    //
+    // add  google login 
+    const provider = new GoogleAuthProvider();
+    const loginWithGoogle = () =>{
+       return signInWithPopup(auth, provider)
     }
     // get current logged in user
     useEffect(() => {
@@ -44,7 +50,7 @@ const Context = ({ children }) => {
     }
     //context data
     const contextData = {
-        createNewUser, loginUser, logOutUser, userinfo, loading, setloading
+        createNewUser, loginUser, logOutUser, userinfo, loading, setloading,loginWithGoogle
     }
     return (
         <FoodWaveData.Provider value={contextData}>
