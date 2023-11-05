@@ -5,12 +5,10 @@ import { HiEye, HiEyeOff } from 'react-icons/hi';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
 import { FoodWaveData } from '../../Context/Context';
 import { updateProfile } from "firebase/auth";
-// import app from '../../Firebase/Firebase';
-// const auth = getAuth(app);
 const SignUp = () => {
     const axiosrequest = useAxiosConfig()
     const [showbutton, setShowBtn] = useState(true)
-    const [Profilepic,setprofilePic]=useState(null)
+    const [Profilepic, setprofilePic] = useState(null)
     //context data 
     const { createNewUser } = useContext(FoodWaveData)
     // password show hide
@@ -23,6 +21,11 @@ const SignUp = () => {
             passwordField.type = 'password'
             setShowBtn(true)
         }
+    }
+    function name(params) {
+        axiosrequest.post('/user', formData).then((data) => {
+            setprofilePic(data.data)
+        })
     }
     const formSubmit = e => {
         let error = [];
@@ -56,31 +59,39 @@ const SignUp = () => {
         } else {
             createNewUser(email, password)
                 .then((userCredential) => {
+                    const user = userCredential.user;
                     const formData = new FormData()
                     formData.append('file', file)
                     formData.append('email', email)
-                    axiosrequest.post('/user', formData).then((data) =>{
+                    axiosrequest.post('/user', formData).then((data) => {
                         setprofilePic(data.data)
-                    } )
-                    const user = userCredential.user;
-                    updateProfile(user, {
-                        displayName: username, photoURL: Profilepic?.filename
-                    }).then(() => {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'Your work has been saved',
-                            showConfirmButton: false,
-                            timer: 1500
-                          })
-                    }).catch((error) => {
-                        Swal.fire(
-                            'opps!!',
-                            `unable to update profile`,
-                            'error'
-                        )
-                    });
+                        console.log(data.data.filename)
+                        updateProfile(user, {
+                            displayName: username, photoURL: data.data.filename
+                        }).then(() => {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'Your work has been saved',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                        }).catch((error) => {
+                            Swal.fire(
+                                'opps!!',
+                                `unable to update profile`,
+                                'error'
+                            )
+                        });
+                    })
+                }).catch((err) => {
+                    Swal.fire(
+                        'opps!!',
+                        `unable to update profile picture`,
+                        'error'
+                    )
                 })
+
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;

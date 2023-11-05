@@ -1,7 +1,49 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
-
+import { HiEye, HiEyeOff } from 'react-icons/hi';
+import { FoodWaveData } from '../../Context/Context';
+import Swal from 'sweetalert2';
 const Login = () => {
+    // context data 
+    const {loginUser}=useContext(FoodWaveData)
+    const [showbutton, setShowBtn] = useState(true)
+    //show and hide password 
+    const showPassword = (e) => {
+        const passwordField = document.querySelector('#hs-hero-password-2')
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text'
+            setShowBtn(false)
+        } else {
+            passwordField.type = 'password'
+            setShowBtn(true)
+        }
+    }
+    const formSubmit = e =>{
+        e.preventDefault();
+        const password = e.target.password.value;
+        const email = e.target.email.value;
+        loginUser(email,password)
+        .then((userCredential) => {
+            // Signed in 
+            const user = userCredential.user;
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Your work has been saved',
+                showConfirmButton: false,
+                timer: 1500
+              })
+          })
+          .catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            Swal.fire(
+                'opps!!',
+                `${errorMessage}`,
+                'error'
+            )
+          });
+    }
     return (
         <div className='bg-black bg-opacity-5 py-8'>
             <div class="container mx-auto max-w-3xl">
@@ -29,15 +71,16 @@ const Login = () => {
                         <div class="py-6 flex items-center text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:mr-6 after:flex-[1_1_0%] after:border-t after:ml-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Or</div>
 
                         {/* <!-- Form --> */}
-                        <form>
+                        <form onSubmit={formSubmit}>
                             <div class="mb-4">
                                 <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">Email address</span></label>
-                                <input type="email" id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Email address" />
+                                <input type="email" name='email' id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Email address" required/>
                             </div>
 
                             <div class="mb-4">
-                                <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">Password</span></label>
-                                <input type="email" id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password"/>
+                                <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white relative"><span class="sr-only">Password</span>
+                                <input type="password" name='password' id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required/>
+                                <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
                             </div>
 
                             <div class="grid">
