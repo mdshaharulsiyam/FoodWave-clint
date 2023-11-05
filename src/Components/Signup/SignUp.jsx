@@ -1,6 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { HiEye, HiEyeOff } from 'react-icons/hi';
 const SignUp = () => {
+    const [showbutton, setShowBtn] = useState(true)
+    // password show hide
+    const showPassword = (e) => {
+        const passwordField = document.querySelector('#hs-hero-password-2')
+        if (passwordField.type === 'password') {
+            passwordField.type = 'text'
+            setShowBtn(false)
+        } else {
+            passwordField.type = 'password'
+            setShowBtn(true)
+        }
+    }
     return (
         <div className='bg-black bg-opacity-5 py-8'>
             <div class="container mx-auto max-w-3xl">
@@ -24,8 +37,9 @@ const SignUp = () => {
                     </div>
 
                     <div class="mb-4">
-                        <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">Password</span></label>
+                        <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white relative"><span class="sr-only">Password</span>
                         <input type="password" id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required/>
+                        <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
                     </div>
                     <div class="mb-4">
                     <label for="profile-pic">Choose Profile Pic:</label>
