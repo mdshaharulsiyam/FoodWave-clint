@@ -7,7 +7,6 @@ const Root = () => {
         <div>
             <Header></Header>
             <Outlet></Outlet>
-            <h2 className='text-8xl'>ite asjdh</h2>
         </div>
     )
 }
