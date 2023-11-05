@@ -6,6 +6,7 @@ import Root from "../page/Root";
 import Home from "../page/Home";
 import Login from "../Components/login/Login";
 import SignUp from "../Components/Signup/SignUp";
+import PrivetRoute from "../PrivateRoute/PrivetRoute";
 const Route = () => {
     const router = createBrowserRouter([
         {
@@ -24,6 +25,7 @@ const Route = () => {
             path:'/signup',
             element:<SignUp></SignUp>
            },
+         
           ]
         },
       ]);
