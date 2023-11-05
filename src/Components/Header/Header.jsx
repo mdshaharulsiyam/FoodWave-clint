@@ -1,8 +1,14 @@
+import { signOut } from 'firebase/auth';
+import { useContext } from 'react';
 import { BsFillTelephoneFill } from 'react-icons/bs';
 import { MdEmail } from 'react-icons/md';
 import { Link, NavLink } from 'react-router-dom'
+import { FoodWaveData } from '../../Context/Context';
 
 const Header = () => {
+    // context data
+    const {logOutUser}=useContext(FoodWaveData)
+    console.log(logOutUser)
     return (
         <header className="flex flex-wrap sm:justify-start sm:flex-col z-50 w-full bg-white border-b border-gray-200 text-sm pb-2 sm:pb-0 dark:bg-gray-800 dark:border-gray-700">
             {/* <!-- Topbar --> */}
@@ -14,6 +20,7 @@ const Header = () => {
                     </div>
                     <div>
                         <NavLink to={'/login'} className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-600 hover:bg-blue-50 hover:border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:hover:bg-blue-600/[.3] dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-500">Login</NavLink>
+                        <button onClick={logOutUser} className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-600 hover:bg-blue-50 hover:border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:hover:bg-blue-600/[.3] dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-500">log out</button>
                     </div>
                 </div>
             </div>

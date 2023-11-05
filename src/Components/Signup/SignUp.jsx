@@ -22,11 +22,11 @@ const SignUp = () => {
             setShowBtn(true)
         }
     }
-    function name(params) {
-        axiosrequest.post('/user', formData).then((data) => {
-            setprofilePic(data.data)
-        })
-    }
+    // function name(params) {
+    //     axiosrequest.post('/user', formData).then((data) => {
+    //         setprofilePic(data.data)
+    //     })
+    // }
     const formSubmit = e => {
         let error = [];
         e.preventDefault();
@@ -72,10 +72,11 @@ const SignUp = () => {
                             Swal.fire({
                                 position: 'top-end',
                                 icon: 'success',
-                                title: 'Your work has been saved',
+                                title: 'user created succesfully',
                                 showConfirmButton: false,
                                 timer: 1500
                             })
+                            e.target.reset()
                         }).catch((error) => {
                             Swal.fire(
                                 'opps!!',

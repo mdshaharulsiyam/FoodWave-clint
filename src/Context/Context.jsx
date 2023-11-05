@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react"
-import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword , onAuthStateChanged  } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword,signInWithEmailAndPassword , onAuthStateChanged ,signOut } from "firebase/auth";
 import app from "../Firebase/Firebase";
 export const FoodWaveData = createContext(null)
 const auth = getAuth(app);
@@ -29,10 +29,19 @@ const Context = ({ children }) => {
             }
         });
     },[])
+    // logout user 
+    const logOutUser = ()=>{
+        signOut(auth).then(() => {
+            console.log('singout succesfully')
+          }).catch((error) => {
+         console.log('faild to login')
+          });
+    }
     //context data
     const contextData = {
         createNewUser,
-        loginUser
+        loginUser,
+        logOutUser
     }
     return (
         <FoodWaveData.Provider value={contextData}>
