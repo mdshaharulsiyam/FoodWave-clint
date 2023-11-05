@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 
 const Baner = () => {
   return (
-    <div className="bg-[url('/baner.png')] bg-no-repeat bg-cover py-10">
+    <div className="bg-[url('/baner.png')] bg-no-repeat bg-cover py-16">
       <div className='flex justify-between items-center gap-5 container mx-auto'>
         <div className='w-[50%]'>
           <h2 className='text-white text-4xl font-bold pb-4'>Healthy Eating is important part of lifestyle</h2>
