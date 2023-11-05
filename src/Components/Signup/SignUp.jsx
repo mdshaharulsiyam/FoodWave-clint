@@ -1,8 +1,16 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HiEye, HiEyeOff } from 'react-icons/hi';
+import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
+import { FoodWaveData } from '../../Context/Context';
+import { updateProfile } from "firebase/auth";
+// import app from '../../Firebase/Firebase';
+// const auth = getAuth(app);
 const SignUp = () => {
+    const axiosrequest = useAxiosConfig()
     const [showbutton, setShowBtn] = useState(true)
+    //context data 
+    const { createNewUser } = useContext(FoodWaveData)
     // password show hide
     const showPassword = (e) => {
         const passwordField = document.querySelector('#hs-hero-password-2')
@@ -21,32 +29,52 @@ const SignUp = () => {
         const email = e.target.email.value;
         const username = e.target.username.value;
         const file = e.target.file.files[0];
-        console.log(password,email,username,file)
-        // const passwordLength = /.{6,}/;
-        // const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
-        // const uppercase = /[A-Z]/;
-        // if (!passwordLength.test(password)) {
-        //     error = [...error,'Password should be at least 6 characters long']
-        // }
+        const formData = new FormData()
+        formData.append('file', file)
+        axiosrequest.post('/user', formData).then((data) => console.log(data.data))
+        const passwordLength = /.{6,}/;
+        const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
+        const uppercase = /[A-Z]/;
+        if (!passwordLength.test(password)) {
+            error = [...error, 'Password should be at least 6 characters long']
+        }
 
-        // if (!specialCharacter.test(password)) {
-        //     error = [...error,'Password should contain at least one special character']
-        // }
+        if (!specialCharacter.test(password)) {
+            error = [...error, 'Password should contain at least one special character']
+        }
 
-        // if (!uppercase.test(password)) {
-        //     error = [...error,'Password should contain at least one uppercase letter']
-        // }
-        // if (error.length>0) {
-        //    const msg = error[0]
-        //    Swal.fire(
-        //     'opps!!',
-        //     `${msg}`,
-        //     'error'
-        //   )
-            
-        // }else{
-        //     signupuser(password,email,username)
-        // }
+        if (!uppercase.test(password)) {
+            error = [...error, 'Password should contain at least one uppercase letter']
+        }
+        if (error.length > 0) {
+            const msg = error[0]
+            Swal.fire(
+                'opps!!',
+                `${msg}`,
+                'error'
+            )
+
+        } else {
+            createNewUser(email, password)
+                .then((userCredential) => {
+                    // Signed up 
+                    const user = userCredential.user;
+                    updateProfile(user, {
+                        displayName: "Jane Q. User", photoURL: "https://example.com/jane-q-user/profile.jpg"
+                    }).then(() => {
+                        // Profile updated!
+                        // ...
+                    }).catch((error) => {
+                        // An error occurred
+                        // ...
+                    });
+                })
+                .catch((error) => {
+                    const errorCode = error.code;
+                    const errorMessage = error.message;
+                    // ..
+                });
+        }
     };
 
     return (
@@ -64,7 +92,7 @@ const SignUp = () => {
                 <form onSubmit={formSubmit}>
                     <div class="mb-4">
                         <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">username</span></label>
-                        <input type="text" name='username' id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="username" required/>
+                        <input type="text" name='username' id="hs-hero-email-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="username" required />
                     </div>
                     <div class="mb-4">
                         <label for="hs-hero-email-2" class="block text-sm font-medium dark:text-white"><span class="sr-only">Email address</span></label>
@@ -73,12 +101,12 @@ const SignUp = () => {
 
                     <div class="mb-4">
                         <label for="hs-hero-password-2" class="block text-sm font-medium dark:text-white relative"><span class="sr-only">Password</span>
-                        <input type="password" name='password' id="hs-hero-password-2" class="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required/>
-                        <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
+                            <input type="password" name='password' id="hs-hero-password-2" class="py-3 font-sans px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required />
+                            <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
                     </div>
                     <div class="mb-4">
-                    <label for="profile-pic">Choose Profile Pic:</label>
-                        <input type="file" name='file' id="profile-pic" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" required/>
+                        <label for="profile-pic">Choose Profile Pic:</label>
+                        <input type="file" name='file' id="profile-pic" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" required />
                     </div>
 
                     <div class="grid">
