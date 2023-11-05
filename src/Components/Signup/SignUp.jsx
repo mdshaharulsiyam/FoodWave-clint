@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import Swal from 'sweetalert2'
 import { Link } from 'react-router-dom'
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
@@ -9,6 +10,7 @@ import { updateProfile } from "firebase/auth";
 const SignUp = () => {
     const axiosrequest = useAxiosConfig()
     const [showbutton, setShowBtn] = useState(true)
+    const [Profilepic,setprofilePic]=useState(null)
     //context data 
     const { createNewUser } = useContext(FoodWaveData)
     // password show hide
@@ -29,9 +31,6 @@ const SignUp = () => {
         const email = e.target.email.value;
         const username = e.target.username.value;
         const file = e.target.file.files[0];
-        const formData = new FormData()
-        formData.append('file', file)
-        axiosrequest.post('/user', formData).then((data) => console.log(data.data))
         const passwordLength = /.{6,}/;
         const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
         const uppercase = /[A-Z]/;
@@ -57,22 +56,39 @@ const SignUp = () => {
         } else {
             createNewUser(email, password)
                 .then((userCredential) => {
-                    // Signed up 
+                    const formData = new FormData()
+                    formData.append('file', file)
+                    formData.append('email', email)
+                    axiosrequest.post('/user', formData).then((data) =>{
+                        setprofilePic(data.data)
+                    } )
                     const user = userCredential.user;
                     updateProfile(user, {
-                        displayName: "Jane Q. User", photoURL: "https://example.com/jane-q-user/profile.jpg"
+                        displayName: username, photoURL: Profilepic?.filename
                     }).then(() => {
-                        // Profile updated!
-                        // ...
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Your work has been saved',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
                     }).catch((error) => {
-                        // An error occurred
-                        // ...
+                        Swal.fire(
+                            'opps!!',
+                            `unable to update profile`,
+                            'error'
+                        )
                     });
                 })
                 .catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
-                    // ..
+                    Swal.fire(
+                        'opps!!',
+                        `${errorMessage}`,
+                        'error'
+                    )
                 });
         }
     };
