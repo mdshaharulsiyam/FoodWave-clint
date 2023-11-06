@@ -31,7 +31,7 @@ const Context = ({ children }) => {
             if (user) {
                 const { displayName, email, photoURL } = user
                 const data = { displayName, email, photoURL }
-                axiosrequest.post('/jwt',data).then((data)=>console.log(data))
+                axiosrequest.post('/jwt',data).then((data)=>console.log('logged in succesfull'))
                 setuserinfo(data)
             } else {
                 setuserinfo(null)

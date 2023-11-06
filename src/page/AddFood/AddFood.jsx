@@ -63,6 +63,7 @@ const AddFood = () => {
         formData.append('useremail', userinfo?.email)
         formData.append('userephoto', userinfo?.photoURL)
         formData.append('status', 'pending')
+        formData.append('date', insertedDate)
         mutation.mutate(formData);
     }
 
