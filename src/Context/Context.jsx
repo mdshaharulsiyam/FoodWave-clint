@@ -1,12 +1,14 @@
 import { createContext, useEffect, useState } from "react"
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut ,GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import app from "../Firebase/Firebase";
+import useAxiosConfig from "../CustomHooks/useAxiosConfig";
 export const FoodWaveData = createContext(null)
 const auth = getAuth(app);
 const Context = ({ children }) => {
     // states 
     const [userinfo, setuserinfo] = useState(null)
     const [loading, setloading] = useState(false)
+    const axiosrequest = useAxiosConfig()
     // create user with email and password
     const createNewUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -30,6 +32,7 @@ const Context = ({ children }) => {
                 console.log(user)
                 const { displayName, email, photoURL } = user
                 const data = { displayName, email, photoURL }
+                axiosrequest.post('/jwt',user).then((data)=>console.log(data))
                 setuserinfo(data)
             } else {
                 setuserinfo(null)

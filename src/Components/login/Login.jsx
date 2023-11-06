@@ -3,13 +3,11 @@ import { Link, Navigate, useNavigate } from 'react-router-dom'
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { FoodWaveData } from '../../Context/Context';
 import Swal from 'sweetalert2';
+import { Helmet } from 'react-helmet';
+
 const Login = () => {
     // context data 
     const { loginUser, loading, setloading, userinfo, loginWithGoogle } = useContext(FoodWaveData)
-    // chack already loading or not 
-    // if (loading) {
-    //     return 
-    // }
     if (userinfo?.displayName) {
         return <Navigate to={'/'}></Navigate>
     } else {
@@ -32,7 +30,7 @@ const Login = () => {
                             timer: 1500
                         })
                     }
-                
+
                 }).catch((error) => {
                     const errorCode = error.code;
                     const errorMessage = error.message;
@@ -90,6 +88,10 @@ const Login = () => {
         }
         return (
             <div className='bg-black bg-opacity-5 py-8 relative'>
+                <Helmet>
+                    <title>FoodWave | login</title>
+                    <meta name="description" content="This is a description of my page." />
+                </Helmet>
                 {
                     loading && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
                 }

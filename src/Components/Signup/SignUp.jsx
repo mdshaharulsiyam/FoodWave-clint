@@ -5,6 +5,7 @@ import { HiEye, HiEyeOff } from 'react-icons/hi';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
 import { FoodWaveData } from '../../Context/Context';
 import { updateProfile } from "firebase/auth";
+import { Helmet } from 'react-helmet';
 const SignUp = () => {
     const axiosrequest = useAxiosConfig()
     const [showbutton, setShowBtn] = useState(true)
@@ -111,6 +112,10 @@ const SignUp = () => {
 
         return (
             <div className='bg-black bg-opacity-5 py-8 relative'>
+                <Helmet>
+                    <title>FoodWave | sign up</title>
+                    <meta name="description" content="This is a description of my page." />
+                </Helmet>
                 {
                     loading && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
                 }
