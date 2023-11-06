@@ -8,7 +8,7 @@ import { FoodWaveData } from '../../Context/Context';
 const Header = () => {
     // context data
     const { logOutUser, userinfo, loading } = useContext(FoodWaveData)
-
+    console.log(userinfo?.photoURL)
     return (
         <header className="flex flex-wrap sm:justify-start sm:flex-col z-50 w-full bg-white border-b border-gray-200 text-sm pb-2 sm:pb-0 dark:bg-gray-800 dark:border-gray-700">
             {/* <!-- Topbar --> */}
@@ -25,7 +25,7 @@ const Header = () => {
                         {
                             userinfo?.displayName ? <div className='flex justify-end items-center gap-1'>
                                 <h4>{userinfo?.displayName}</h4>
-                                <img className='w-10 h-10 rounded-full' src={userinfo?.photoURL} alt="" />
+                                <img className='w-10 h-10 rounded-full' src={userinfo?.photoURL} alt="profile" />
                                 <button onClick={logOutUser} className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-600 hover:bg-blue-50 hover:border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:hover:bg-blue-600/[.3] dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-500">log out</button>
                             </div> : <NavLink to={'/login'} className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-600 hover:bg-blue-50 hover:border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:hover:bg-blue-600/[.3] dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-500">Login</NavLink>
                         }
@@ -54,7 +54,7 @@ const Header = () => {
                 <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
                     <div className="flex flex-col gap-y-4 gap-x-0 mt-5 sm:flex-row sm:items-center sm:justify-end sm:gap-y-0 sm:gap-x-7 sm:mt-0 sm:pl-7">
                         <NavLink to={'/'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Home</NavLink>
-                        <NavLink to={'/availablefood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Available Foods</NavLink>
+                        <NavLink to={'/foods'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Available Foods</NavLink>
                         {
                             userinfo?.displayName && <>
                                 <NavLink to={'/addfood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400">Add Food</NavLink>

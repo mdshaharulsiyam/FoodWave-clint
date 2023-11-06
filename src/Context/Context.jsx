@@ -52,7 +52,7 @@ const Context = ({ children }) => {
     }
     //context data
     const contextData = {
-        createNewUser, loginUser, logOutUser, userinfo, loading, setloading,loginWithGoogle
+        createNewUser, loginUser, logOutUser, userinfo, loading, setloading,loginWithGoogle,
     }
     return (
         <FoodWaveData.Provider value={contextData}>
