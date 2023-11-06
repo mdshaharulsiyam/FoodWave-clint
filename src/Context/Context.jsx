@@ -29,10 +29,9 @@ const Context = ({ children }) => {
         setloading(true)
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log(user)
                 const { displayName, email, photoURL } = user
                 const data = { displayName, email, photoURL }
-                axiosrequest.post('/jwt',user).then((data)=>console.log(data))
+                axiosrequest.post('/jwt',data).then((data)=>console.log(data))
                 setuserinfo(data)
             } else {
                 setuserinfo(null)
