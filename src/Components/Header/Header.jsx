@@ -8,7 +8,6 @@ import { FoodWaveData } from '../../Context/Context';
 const Header = () => {
     // context data
     const { logOutUser, userinfo, loading } = useContext(FoodWaveData)
-    console.log(userinfo?.photoURL)
     return (
         <header className="flex flex-wrap sm:justify-start sm:flex-col z-50 w-full bg-white border-b border-gray-200 text-sm pb-2 sm:pb-0 dark:bg-gray-800 dark:border-gray-700">
             {/* <!-- Topbar --> */}

@@ -2,8 +2,12 @@ import { MdLocationOn } from 'react-icons/md';
 import { Link } from 'react-router-dom';
 
 const FeaturedFoodsCud = ({ item }) => {
-    console.log(item)
-    const { FoodName, Quantity, foodimage, location, notes, status, useremail, userephoto, username, _id } = item
+    const { FoodName, Quantity, foodimage, location, notes, status, useremail, userephoto, username, _id, date } = item
+    const currentDate = new Date(date)
+    const year = currentDate.getUTCFullYear();
+    const month = (currentDate.getUTCMonth() + 1).toString().padStart(2, "0");
+    const day = currentDate.getUTCDate().toString().padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
     return (
         <div className='w-full overflow-hidden p-3 box-border shadow-2xl rounded-xl'>
             <img className='w-full h-[330px] object-cover rounded-2xl bg-black bg-opacity-20' src={foodimage} alt="foodimage" />
@@ -12,6 +16,8 @@ const FeaturedFoodsCud = ({ item }) => {
             <p>Quantity : {Quantity}</p>
             </span>
             <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
+           <p className='text-xs font-extrabold'>Expired in {formattedDate}</p>
+            <p>doner info</p>
             <span className='flex justify-between text-right font-bold items-center gap-1 text-xs'>
                 <img className='w-10 h-10 rounded-full' src={userephoto} alt="userephoto" />
                 <span>

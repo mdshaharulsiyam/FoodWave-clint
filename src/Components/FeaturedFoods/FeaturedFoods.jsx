@@ -7,7 +7,6 @@ import { FoodWaveData } from '../../Context/Context'
 const FeaturedFoods = () => {
   const axiosrequest = useAxiosConfig()
   const [feturedFoodsData, setFeturedFoodsData] = useState([])
-  console.log(feturedFoodsData)
   const { isPending, error, data } = useQuery({
     queryKey: ['feturedfoodsData'],
     queryFn: () =>
