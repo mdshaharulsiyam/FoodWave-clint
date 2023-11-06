@@ -3,11 +3,12 @@ import {
     RouterProvider,
   } from "react-router-dom";
 import Root from "../page/Root";
-import Home from "../page/Home";
-import Login from "../Components/login/Login";
-import SignUp from "../Components/Signup/SignUp";
 import PrivetRoute from "../PrivateRoute/PrivetRoute";
 import ErrorPage from "../Components/ErrorPage/ErrorPage";
+import Home from "../page/Home/Home";
+import Login from "../page/login/Login";
+import SignUp from "../page/Signup/SignUp";
+import AddFood from "../page/AddFood/AddFood";
 const Route = () => {
     const router = createBrowserRouter([
         {
@@ -20,6 +21,11 @@ const Route = () => {
             element:<Home></Home>
            },
            {
+            path:'/addfood',
+            element:<PrivetRoute><AddFood></AddFood></PrivetRoute>
+           },
+       
+           {
             path:'/login',
             element:<Login></Login>
            },
@@ -27,7 +33,7 @@ const Route = () => {
             path:'/signup',
             element:<SignUp></SignUp>
            },
-         
+
           ]
         },
       ]);

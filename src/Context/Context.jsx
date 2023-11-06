@@ -7,7 +7,7 @@ const auth = getAuth(app);
 const Context = ({ children }) => {
     // states 
     const [userinfo, setuserinfo] = useState(null)
-    const [loading, setloading] = useState(false)
+    const [loading, setloading] = useState(true)
     const axiosrequest = useAxiosConfig()
     // create user with email and password
     const createNewUser = (email, password) => {
