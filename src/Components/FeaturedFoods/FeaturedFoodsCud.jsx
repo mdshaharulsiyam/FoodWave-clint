@@ -15,8 +15,7 @@ const FeaturedFoodsCud = ({ item }) => {
             <h3 className='text-xl font-bold'>{FoodName}</h3>
             <p>Quantity : {Quantity}</p>
             </span>
-            <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
-           <p className='text-xs font-extrabold'>Expired in {formattedDate}</p>
+           <p className='text-xs py-1 font-extrabold'>Expired in {formattedDate}</p>
             <p>doner info</p>
             <span className='flex justify-between text-right font-bold items-center gap-1 text-xs'>
                 <img className='w-10 h-10 rounded-full' src={userephoto} alt="userephoto" />
@@ -25,6 +24,7 @@ const FeaturedFoodsCud = ({ item }) => {
                     <p>{useremail}</p>
                 </span>
             </span>
+            <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
             <Link className='block mx-auto text-center py-1 hover:bg-orange-300 transition-all bg-orange-500 rounded-lg my-2 font-extrabold'>request now</Link>
         </div>
     )
