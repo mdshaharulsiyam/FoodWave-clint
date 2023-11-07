@@ -11,6 +11,7 @@ const Foods = () => {
     const queryClient = useQueryClient();
     const { register, } = useForm();
     const [sliderData, setSliderData] = useState([])
+    const [search,setsearch]=useState(false)
     const [filtervalue, setfiltervalue] = useState('')
     const [shortitem, setshortitem] = useState('none')
     const [shorby, setsortby] = useState('none')
@@ -22,15 +23,16 @@ const Foods = () => {
             axiosrequest.get('/feturedfood')
                 .then((data) => setSliderData(data.data))
     });
-    const { isLoading, err, fooddata } = useQuery({
-        queryKey: ['foodsData'],
+    const { isLoading, err, fooddata ,refetch} = useQuery({
+        queryKey: ['foodsData', shortitem, shorby],
         queryFn: () =>
             axiosrequest.get(`/foods?shortitem=${shortitem}&shorby=${shorby}`)
                 .then((data) => setFoodData(data.data))
     });
     useEffect(() => {
         queryClient.invalidateQueries(['foodsData']);
-    }, [shortitem, shorby]);
+        console.log(shortitem, shorby)
+    }, [shortitem, shorby,search]);
     // filter item 
     useEffect(() => {
         const filtered = foodData.filter((item) =>
@@ -38,6 +40,10 @@ const Foods = () => {
         );
         setfilteredFoodData(filtered)
     }, [filtervalue,foodData])
+    // handel search
+    const handelsearch=()=>{
+        setsearch(!search)
+    }
     return (
         <div className=''>
             <Carousel autoplay={true} autoplayInterval={2000} wrapAround={true} dragging={true}>
@@ -71,9 +77,9 @@ const Foods = () => {
                     <input onKeyUp={e => setfiltervalue(e.target.value)}
                         type="text"
                         placeholder="Search"
-                        className="py-2 pl-10 pr-4 w-64 border rounded-full focus:outline-none focus:ring focus:border-blue-400"
+                        className="py-2 pl-10 pr-4 w-64 border-4 rounded-full focus:outline-none focus:ring focus:border-orange-400"
                     />
-                    <FaSearch className="absolute top-[50%] translate-y-[-50%] right-3 text-2xl hover:text-orange-700 cursor-pointer active:scale-95 hover:scale-110 text-gray-500" />
+                    <FaSearch onClick={handelsearch} className="absolute top-[50%] translate-y-[-50%] right-3 text-2xl hover:text-orange-700 cursor-pointer active:scale-95 hover:scale-110 text-gray-500" />
                 </span>
             </div>
             <div className='grid md:grid-cols-2 md:gap-14 lg:grid-cols-3 lg:gap-5 relative container mx-auto '>
