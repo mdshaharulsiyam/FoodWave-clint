@@ -2,46 +2,33 @@ import React, { useContext, useEffect, useState } from 'react'
 import { FaSearch } from 'react-icons/fa';
 import Carousel from "nuka-carousel"
 import Slider from '../../Components/Slider/Slider'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import FeaturedFoodsCud from '../../Components/FeaturedFoods/FeaturedFoodsCud'
 import { useForm } from "react-hook-form";
 const Foods = () => {
     const axiosrequest = useAxiosConfig()
-    const queryClient = useQueryClient();
     const { register, } = useForm();
     const [sliderData, setSliderData] = useState([])
-    const [search,setsearch]=useState(false)
+    const [search, setsearch] = useState(false)
     const [filtervalue, setfiltervalue] = useState('')
     const [shortitem, setshortitem] = useState('none')
     const [shorby, setsortby] = useState('none')
     const [foodData, setFoodData] = useState([])
-    const [filteredFoodData, setfilteredFoodData] = useState([])
     const { isPending, error, data } = useQuery({
         queryKey: ['feturedfoodsData'],
         queryFn: () =>
             axiosrequest.get('/feturedfood')
                 .then((data) => setSliderData(data.data))
     });
-    const { isLoading, err, fooddata ,refetch} = useQuery({
-        queryKey: ['foodsData', shortitem, shorby],
+    const { isLoading, err, fooddata, refetch } = useQuery({
+        queryKey: ['foodsData', shortitem, shorby, filtervalue],
         queryFn: () =>
-            axiosrequest.get(`/foods?shortitem=${shortitem}&shorby=${shorby}`)
+            axiosrequest.get(`/foods?shortitem=${shortitem}&shorby=${shorby}&search=${filtervalue}`)
                 .then((data) => setFoodData(data.data))
     });
-    useEffect(() => {
-        queryClient.invalidateQueries(['foodsData']);
-        console.log(shortitem, shorby)
-    }, [shortitem, shorby,search]);
-    // filter item 
-    useEffect(() => {
-        const filtered = foodData.filter((item) =>
-            item.FoodName.toLowerCase().includes(filtervalue.toLowerCase())
-        );
-        setfilteredFoodData(filtered)
-    }, [filtervalue,foodData])
     // handel search
-    const handelsearch=()=>{
+    const handelsearch = () => {
         setsearch(!search)
     }
     return (
@@ -84,9 +71,17 @@ const Foods = () => {
             </div>
             <div className='grid md:grid-cols-2 md:gap-14 lg:grid-cols-3 lg:gap-5 relative container mx-auto '>
                 {
-                    isLoading ? <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : filteredFoodData.map(item => <FeaturedFoodsCud key={item._id} item={item}></FeaturedFoodsCud>)
+                    isLoading ? <span className='absolute top-[50%] my-28 left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : foodData.map(item => <FeaturedFoodsCud key={item._id} item={item}></FeaturedFoodsCud>)
                 }
+
             </div>
+            {
+                !isLoading && foodData.length <= 0 && <div>
+                    <h4 className='text-center text-red-500 font-bold text-2xl'>no food found</h4>
+                    <img className='text-center mx-auto' src='/nodata.webp'></img>
+
+                </div>
+            }
         </div>
     )
 }

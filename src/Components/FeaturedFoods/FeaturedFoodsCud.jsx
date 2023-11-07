@@ -25,7 +25,7 @@ const FeaturedFoodsCud = ({ item }) => {
                 </span>
             </span>
             <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
-            <Link className='block mx-auto text-center py-1 hover:bg-orange-300 transition-all bg-orange-500 rounded-lg my-2 font-extrabold'>request now</Link>
+            <Link to={`/details/${_id}`} className='block mx-auto text-center py-1 hover:bg-orange-300 transition-all bg-orange-500 rounded-lg my-2 font-extrabold'>request now</Link>
         </div>
     )
 }
