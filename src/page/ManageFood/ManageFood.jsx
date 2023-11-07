@@ -2,10 +2,15 @@ import React, { useContext, useState } from 'react';
 import { FoodWaveData } from '../../Context/Context';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
 import { useQuery } from '@tanstack/react-query';
-import { useTable ,useSortBy} from 'react-table';
+import { useTable, useSortBy } from 'react-table';
 import { useMemo } from 'react';
-import {Table,Thead,Tbody,Tr,Image,Th,Td,} from '@chakra-ui/react'
+import { Table, Thead, Tbody, Tr, Image, Th, Td, Tooltip, Button } from '@chakra-ui/react'
+import { AiTwotoneDelete } from 'react-icons/ai';
+import { FaEdit } from 'react-icons/fa';
+import { BiDetail } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
 const ManageFood = () => {
+    const navigate = useNavigate()
     const { userinfo } = useContext(FoodWaveData)
     const axiosrequest = useAxiosConfig()
     const [managefoodData, setManageFoodData] = useState([])
@@ -16,7 +21,7 @@ const ManageFood = () => {
             axiosrequest.get(`/myfood?email=${email}`)
                 .then((data) => setManageFoodData(data.data))
     });
-console.log(managefoodData)
+    console.log(managefoodData)
     const columns = useMemo(() => [
         {
             Header: 'Name',
@@ -41,37 +46,43 @@ console.log(managefoodData)
         {
             Header: 'foodimage',
             accessor: 'foodimage',
-            Cell:({ row }) => <Image className='mx-auto' src={row.values.foodimage}  width="60px"/>
+            Cell: ({ row }) => <Image className='mx-auto' src={row.values.foodimage} width="60px" />
         },
         {
             Header: 'Actions',
             accessor: 'actions',
             Cell: ({ row }) => (
-                <div>
-                    <button onClick={() => handleEdit(row)}>Edit</button>
-                    <button onClick={() => handleDelete(row)}>Delete</button>
-                    <button onClick={() => handleViewDetails(row)}>View Details</button>
+                <div className='flex justify-center items-center text-2xl gap-2'>
+                    <Tooltip label="details">
+                        <button className='hover:scale-125 pt-1 transition-all' onClick={() => handleViewDetails(row)}><BiDetail /></button>
+                    </Tooltip>
+                    <Tooltip label="Edit">
+                        <button className='hover:scale-125 transition-all' onClick={() => handleEdit(row)}><FaEdit /></button>
+                    </Tooltip>
+                    <Tooltip label="delete">
+                        <button className='hover:scale-125 hover:text-red-600 transition-all' onClick={() => handleDelete(row)}><AiTwotoneDelete /></button>
+                    </Tooltip>
                 </div>
             ),
         },
     ], []);
-    
+
 
     const handleEdit = (row) => {
-        // Implement the edit action
         console.log('Edit:', row.original._id);
+        navigate(`/update/${row.original._id}`)
     };
-    
+
     const handleDelete = (row) => {
         // Implement the delete action
         console.log('Delete:', row.original);
     };
-    
+
     const handleViewDetails = (row) => {
         // Implement the view details action
         console.log('View Details:', row.original);
     };
-    
+
     const {
         getTableProps,
         getTableBodyProps,
@@ -81,36 +92,36 @@ console.log(managefoodData)
     } = useTable({
         columns,
         data: managefoodData,
-    },useSortBy);
-    
+    }, useSortBy);
+
     return (
-            <Table className='text-center my-16' variant='striped' colorScheme='teal' {...getTableProps()} >
-                <Thead>
-                    {headerGroups.map(headerGroup => (
-                        <Tr className='font-extrabold text-xl uppercase text-orange-500 ' {...headerGroup.getHeaderGroupProps()}>
-                            {headerGroup.headers.map(column => (
-                                <Th className='px-2 py-3' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
-                            ))}
+        <Table className='text-center my-16 mx-auto' variant='striped' colorScheme='teal' {...getTableProps()} >
+            <Thead>
+                {headerGroups.map(headerGroup => (
+                    <Tr className='font-extrabold text-xl uppercase text-orange-500 ' {...headerGroup.getHeaderGroupProps()}>
+                        {headerGroup.headers.map(column => (
+                            <Th className='px-2 py-3' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
+                        ))}
+                    </Tr>
+                ))}
+            </Thead>
+            <Tbody {...getTableBodyProps()}>
+                {rows.map(row => {
+                    prepareRow(row);
+                    return (
+                        <Tr className='py-2' {...row.getRowProps()}>
+                            {row.cells.map(cell => {
+                                return (
+                                    <Td className='py-4 border-4 border-orange-300' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                                );
+                            })}
                         </Tr>
-                    ))}
-                </Thead>
-                <Tbody {...getTableBodyProps()}>
-                    {rows.map(row => {
-                        prepareRow(row);
-                        return (
-                            <Tr className='py-2' {...row.getRowProps()}>
-                                {row.cells.map(cell => {
-                                    return (
-                                        <Td className='py-4 border-4' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                                    );
-                                })}
-                            </Tr>
-                        );
-                    })}
-                </Tbody>
-            </Table>
+                    );
+                })}
+            </Tbody>
+        </Table>
     );
-    
+
 };
 
 export default ManageFood;
