@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { FoodWaveData } from '../../Context/Context';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
-import { useQuery } from '@tanstack/react-query';
+import { useQuery,useMutation } from '@tanstack/react-query';
 import { useTable, useSortBy } from 'react-table';
 import { useMemo } from 'react';
 import { Table, Thead, Tbody, Tr, Image, Th, Td, Tooltip, Button } from '@chakra-ui/react'
@@ -66,16 +66,24 @@ const ManageFood = () => {
             ),
         },
     ], []);
-
-
+    const sendDeletRequest = async (id) => {
+        axiosrequest.delete(`/foods?id=${id}`);
+        setsendindData(false)
+    };
+    const mutation = useMutation({
+        mutationFn: sendDeletRequest,
+        onSuccess: () => {
+            QueryClient.invalidateQueries({ queryKey: ['manageFood'] })
+        },
+    })
     const handleEdit = (row) => {
         console.log('Edit:', row.original._id);
         navigate(`/update/${row.original._id}`)
     };
 
     const handleDelete = (row) => {
-        // Implement the delete action
         console.log('Delete:', row.original);
+        mutation.mutate(row.original._id);
     };
 
     const handleViewDetails = (row) => {
@@ -95,31 +103,34 @@ const ManageFood = () => {
     }, useSortBy);
 
     return (
-        <Table className='text-center my-16 mx-auto' variant='striped' colorScheme='teal' {...getTableProps()} >
-            <Thead>
-                {headerGroups.map(headerGroup => (
-                    <Tr className='font-extrabold text-xl uppercase text-orange-500 ' {...headerGroup.getHeaderGroupProps()}>
-                        {headerGroup.headers.map(column => (
-                            <Th className='px-2 py-3' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
-                        ))}
-                    </Tr>
-                ))}
-            </Thead>
-            <Tbody {...getTableBodyProps()}>
-                {rows.map(row => {
-                    prepareRow(row);
-                    return (
-                        <Tr className='py-2' {...row.getRowProps()}>
-                            {row.cells.map(cell => {
-                                return (
-                                    <Td className='py-4 border-4 border-orange-300' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
-                                );
-                            })}
+        <>
+        <h3 className='text-center text-3xl mt-16 mb-4 font-bold'>my food list</h3>
+            <Table className='text-center mx-auto' variant='striped' colorScheme='teal' {...getTableProps()} >
+                <Thead>
+                    {headerGroups.map(headerGroup => (
+                        <Tr className='font-extrabold text-xl uppercase text-orange-500 ' {...headerGroup.getHeaderGroupProps()}>
+                            {headerGroup.headers.map(column => (
+                                <Th className='px-2 py-3' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
+                            ))}
                         </Tr>
-                    );
-                })}
-            </Tbody>
-        </Table>
+                    ))}
+                </Thead>
+                <Tbody {...getTableBodyProps()}>
+                    {rows.map(row => {
+                        prepareRow(row);
+                        return (
+                            <Tr className='py-2' {...row.getRowProps()}>
+                                {row.cells.map(cell => {
+                                    return (
+                                        <Td className='py-4 border-4 border-orange-300' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                                    );
+                                })}
+                            </Tr>
+                        );
+                    })}
+                </Tbody>
+            </Table>
+        </>
     );
 
 };

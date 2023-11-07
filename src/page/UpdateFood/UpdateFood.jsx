@@ -36,7 +36,7 @@ const UpdateFood = () => {
                 showConfirmButton: false,
                 timer: 1500
             })
-            QueryClient.invalidateQueries({ queryKey: ['feturedfoodsData'] })
+            QueryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
         },
     })
     const formSubmit = (data) => {
@@ -78,7 +78,6 @@ const UpdateFood = () => {
         } else {
             formData.append('foodimage', singlefoodData?.foodimage)
         }
-        // console.log(formData)
         mutation.mutate(formData);
     }
 
