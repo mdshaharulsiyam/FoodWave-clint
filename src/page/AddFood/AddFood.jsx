@@ -52,6 +52,10 @@ const AddFood = () => {
                 'error'
             )
         }
+        const year = insertedDate.getUTCFullYear();
+        const month = (insertedDate.getUTCMonth() + 1).toString().padStart(2, "0");
+        const day = insertedDate.getUTCDate().toString().padStart(2, "0");
+        const formattedDate = `${year}-${month}-${day}`;
         const file = foodimage[0]
         const formData = new FormData()
         formData.append('file', file)
@@ -63,7 +67,7 @@ const AddFood = () => {
         formData.append('useremail', userinfo?.email)
         formData.append('userephoto', userinfo?.photoURL)
         formData.append('status', 'avaulable')
-        formData.append('date', insertedDate)
+        formData.append('date', formattedDate)
         mutation.mutate(formData);
     }
 

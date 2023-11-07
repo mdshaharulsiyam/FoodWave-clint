@@ -20,11 +20,7 @@ const FoodDetails = () => {
                 .then((data) => setSingleFoodData(data.data))
     });
     const { FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, _id } = singlefoodData;
-    const currentDate = new Date(date)
-    const year = currentDate.getUTCFullYear();
-    const month = (currentDate.getUTCMonth() + 1).toString().padStart(2, "0");
-    const day = currentDate.getUTCDate().toString().padStart(2, "0");
-    const formattedDate = `${year}-${month}-${day}`;
+   
     const goback = () => {
         navigate(-1)
     }
@@ -57,10 +53,16 @@ const FoodDetails = () => {
                 text: "please login first",
             });
         }
+        const currentDate = new Date();
+        const year = currentDate.getUTCFullYear();
+        const month = (currentDate.getUTCMonth() + 1).toString().padStart(2, "0");
+        const day = currentDate.getUTCDate().toString().padStart(2, "0");
+        const formattedDate = `${year}-${month}-${day}`;
         const requestData = {
             FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, additionalnote, donation,
             'requestUser': userinfo?.email,
-            'foodid' : _id
+            'foodid' : _id,
+            'requastedDate' :formattedDate
         }
         mutation.mutate(requestData);
     }
@@ -86,7 +88,7 @@ const FoodDetails = () => {
                         <h3 className='text-xl font-bold'>{FoodName}</h3>
                         <p>Quantity : {Quantity}</p>
                     </span>
-                    <p className='text-xs py-2 font-extrabold'>Expired in {formattedDate} <span className='font-semibold pl-5'>status : <span className='font-bold'>{status}</span></span></p>
+                    <p className='text-xs py-2 font-extrabold'>Expired in {date} <span className='font-semibold pl-5'>status : <span className='font-bold'>{status}</span></span></p>
                     <p>doner info</p>
                     <span className='flex justify-between text-right font-bold items-center gap-1 pt-2'>
                         <img className='w-10 h-10 rounded-full' src={userephoto} alt="userephoto" />
