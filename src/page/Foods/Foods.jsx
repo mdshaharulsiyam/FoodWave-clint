@@ -6,6 +6,7 @@ import { useQuery } from '@tanstack/react-query'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import FeaturedFoodsCud from '../../Components/FeaturedFoods/FeaturedFoodsCud'
 import { useForm } from "react-hook-form";
+import { Helmet } from 'react-helmet';
 const Foods = () => {
     const axiosrequest = useAxiosConfig()
     const { register, } = useForm();
@@ -33,6 +34,9 @@ const Foods = () => {
     }
     return (
         <div className=''>
+            <Helmet>
+                <title>FoodWave | Available Foods</title>
+            </Helmet>
             <Carousel autoplay={true} autoplayInterval={2000} wrapAround={true} dragging={true}>
                 {
                     isPending ? <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : sliderData?.map(item => <Slider key={item._id} item={item}> </Slider>)

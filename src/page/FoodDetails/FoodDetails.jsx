@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import { useNavigate, useParams } from 'react-router-dom'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { MdLocationOn } from 'react-icons/md';
 import { FoodWaveData } from '../../Context/Context';
 import Swal from 'sweetalert2';
+import { Helmet } from 'react-helmet';
 const FoodDetails = () => {
     const { userinfo } = useContext(FoodWaveData)
     const param = useParams()
@@ -29,6 +30,22 @@ const FoodDetails = () => {
     }
     const newdate = new Date()
     const requestDate = newdate.toLocaleString()
+    const sendDataToServer = async (requestData) => {
+        const res = await axiosrequest.post('/foodrequest', requestData);
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'food requested succesfully',
+            showConfirmButton: false,
+            timer: 1500
+        })
+    };
+    const mutation = useMutation({
+        mutationFn: sendDataToServer,
+        onSuccess: () => {
+            // QueryClient.invalidateQueries({ queryKey: ['requestedFood'] })
+        },
+    })
     const sendRequest = e => {
         e.preventDefault()
         const additionalnote = e.target.additionalnote.value;
@@ -38,19 +55,23 @@ const FoodDetails = () => {
                 icon: "error",
                 title: "Oops...",
                 text: "please login first",
-              });
+            });
         }
         const requestData = {
-            ...singlefoodData,
-            additionalnote,
-            donation,
-            'requestUser' : userinfo?.email
+            FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, additionalnote, donation,
+            'requestUser': userinfo?.email,
+            'foodid' : _id
         }
-        console.log(requestData)
+        mutation.mutate(requestData);
     }
+
+
     return (
-        // <!-- Hero -->
+
         <div class="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
+            <Helmet>
+                <title>FoodWave | Food Details</title>
+            </Helmet>
             {/* <!-- Grid --> */}
             <div class="grid lg:grid-cols-7 lg:gap-x-8 xl:gap-x-12 lg:items-center">
 
