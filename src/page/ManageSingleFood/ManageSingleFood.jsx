@@ -37,7 +37,7 @@ const ManageSingleFood = () => {
     const columns = useMemo(() => [
         {
             Header: 'name',
-            accessor: 'username',
+            accessor: 'requestUserName',
         },
         {
             Header: 'Date',

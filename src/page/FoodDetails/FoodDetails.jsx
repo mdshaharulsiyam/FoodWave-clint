@@ -61,6 +61,7 @@ const FoodDetails = () => {
         const requestData = {
             FoodName, location, Quantity, notes, username, useremail, userephoto, foodimage, date, additionalnote, donation,
             'requestUser': userinfo?.email,
+            'requestUserName': userinfo?.displayName,
             'foodid' : _id,
             'requastedDate' :formattedDate,
             'status' :'pending'
@@ -184,7 +185,7 @@ const FoodDetails = () => {
                                         <div>
                                             <label for="email" class="block text-sm mb-2 dark:text-white">Donation Money</label>
                                             <div class="relative">
-                                                <input type="number" placeholder='if want you can donate' name='donation' class="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                                <input type="number" defaultValue={0} placeholder='if want you can donate' name='donation' class="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
                                             </div>
                                         </div>
                                         <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-orange-600 mt-2 text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">request </button>
