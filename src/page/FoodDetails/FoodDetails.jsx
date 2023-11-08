@@ -59,10 +59,11 @@ const FoodDetails = () => {
         const day = currentDate.getUTCDate().toString().padStart(2, "0");
         const formattedDate = `${year}-${month}-${day}`;
         const requestData = {
-            FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, additionalnote, donation,
+            FoodName, location, Quantity, notes, username, useremail, userephoto, foodimage, date, additionalnote, donation,
             'requestUser': userinfo?.email,
             'foodid' : _id,
-            'requastedDate' :formattedDate
+            'requastedDate' :formattedDate,
+            'status' :'pending'
         }
         mutation.mutate(requestData);
     }
@@ -84,10 +85,7 @@ const FoodDetails = () => {
                     <h1 class="block text-2xl font-bold text-gray-800 sm:text-3xl md:text-3xl lg:text-4xl dark:text-white">{FoodName}</h1>
                     <p class="mt-3 text-lg text-gray-800 dark:text-gray-400">{notes}</p>
                     <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
-                    <span className='flex justify-start gap-2 items-center'>
-                        <h3 className='text-xl font-bold'>{FoodName}</h3>
                         <p>Quantity : {Quantity}</p>
-                    </span>
                     <p className='text-xs py-2 font-extrabold'>Expired in {date} <span className='font-semibold pl-5'>status : <span className='font-bold'>{status}</span></span></p>
                     <p>doner info</p>
                     <span className='flex justify-between text-right font-bold items-center gap-1 pt-2'>
@@ -172,7 +170,7 @@ const FoodDetails = () => {
                                     <div>
                                         <label for="email" class="block text-sm mb-2 dark:text-white">Expire Date</label>
                                         <div class="relative">
-                                            <input type="text" disabled defaultValue={formattedDate} id="email" class="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                            <input type="text" disabled defaultValue={date} id="email" class="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
                                         </div>
                                     </div>
 

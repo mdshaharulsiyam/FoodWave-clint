@@ -33,7 +33,7 @@ const Foods = () => {
         setsearch(!search)
     }
     return (
-        <div className=''>
+        <div className='relative'>
             <Helmet>
                 <title>FoodWave | Available Foods</title>
             </Helmet>
@@ -75,7 +75,7 @@ const Foods = () => {
             </div>
             <div className='grid md:grid-cols-2 md:gap-14 lg:grid-cols-3 lg:gap-5 relative container mx-auto '>
                 {
-                    isLoading ? <span className='absolute top-[50%] my-28 left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : foodData.map(item => <FeaturedFoodsCud key={item._id} item={item}></FeaturedFoodsCud>)
+                    isLoading ? <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : foodData.map(item => <FeaturedFoodsCud key={item._id} item={item}></FeaturedFoodsCud>)
                 }
 
             </div>

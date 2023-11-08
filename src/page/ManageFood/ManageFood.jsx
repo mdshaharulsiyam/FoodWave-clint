@@ -37,14 +37,6 @@ const ManageFood = () => {
             accessor: 'Quantity',
         },
         {
-            Header: 'Location',
-            accessor: 'location',
-        },
-        {
-            Header: 'Status',
-            accessor: 'status',
-        },
-        {
             Header: 'foodimage',
             accessor: 'foodimage',
             Cell: ({ row }) => <Image className='mx-auto' src={row.values.foodimage} width="60px" />
@@ -76,7 +68,7 @@ const ManageFood = () => {
         onSuccess: () => {
             Swal.fire({
                 title: "Deleted!",
-                text: "Your file has been deleted.",
+                text: "Your food has been deleted.",
                 icon: "success"
             });
             QueryClient.invalidateQueries({ queryKey: ['manageFood'] })
@@ -128,7 +120,7 @@ const ManageFood = () => {
                     {headerGroups.map(headerGroup => (
                         <Tr className='font-extrabold text-xl uppercase text-orange-500 ' {...headerGroup.getHeaderGroupProps()}>
                             {headerGroup.headers.map(column => (
-                                <Th className='px-2 py-3' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
+                                <Th className='' {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</Th>
                             ))}
                         </Tr>
                     ))}
@@ -140,7 +132,7 @@ const ManageFood = () => {
                             <Tr className='py-2' {...row.getRowProps()}>
                                 {row.cells.map(cell => {
                                     return (
-                                        <Td className='py-4 border-4 border-orange-300' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
+                                        <Td className='border-4 border-orange-300' {...cell.getCellProps()}>{cell.render('Cell')}</Td>
                                     );
                                 })}
                             </Tr>
