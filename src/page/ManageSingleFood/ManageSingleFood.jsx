@@ -1,5 +1,5 @@
-import { useQuery, useMutation,QueryClient } from '@tanstack/react-query';
-import { useContext, useState } from 'react';
+import { useQuery, useMutation, QueryClient, useQueryClient } from '@tanstack/react-query';
+import { useContext, useEffect, useState } from 'react';
 import { FoodWaveData } from '../../Context/Context';
 import { Link, useParams } from 'react-router-dom';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
@@ -14,6 +14,7 @@ const ManageSingleFood = () => {
     const { id } = params
     const [manageFoodData, setManageFoodData] = useState([])
     const [requestedData, setrequestedData] = useState([])
+    const [requestedTableData, setrequestedTableData] = useState([])
     const { userinfo } = useContext(FoodWaveData)
     const { isLoading, err, fooddata } = useQuery({
         queryKey: ['managesingleFood', userinfo?.email],
@@ -21,13 +22,13 @@ const ManageSingleFood = () => {
             axiosrequest.get(`/managefood?email=${userinfo?.email}&id=${id}`)
                 .then((data) => setManageFoodData(data.data))
     });
+    const queryClint = useQueryClient()
     const { ispending, error, requestdata } = useQuery({
         queryKey: ['managerequestdata', userinfo?.email],
         queryFn: () =>
             axiosrequest.get(`/foodrequest?email=${userinfo?.email}&id=${id}`)
                 .then((data) => setrequestedData(data.data))
     });
-    console.log(requestedData)
     const { FoodName, Quantity, foodimage, location, notes, status, useremail, userephoto, username, _id, date, } = manageFoodData
     const currentDate = new Date(date)
     const year = currentDate.getUTCFullYear();
@@ -71,26 +72,31 @@ const ManageSingleFood = () => {
     const sendDeletRequest = async (query) => {
         axiosrequest.delete(`/foodrequest?foodId=${query.foodid}&email=${query.email}&requester=${query.data}`);
     };
+    const [Id, setId] = useState(null)
     const mutation = useMutation({
         mutationFn: sendDeletRequest,
         onSuccess: () => {
+            console.log(Id)
+            const newData = requestedData.filter(item=> item._id!==Id)
+            setrequestedData(newData)
             Swal.fire({
                 title: "Deliverd succesfull",
                 text: "Your food has been Deliverd.",
                 icon: "success"
             });
-            QueryClient.invalidateQueries({ queryKey: ['managerequestdata'] })
+            queryClint.invalidateQueries({ queryKey: ['managerequestdata', 'managesingleFood'] })
         },
     })
-    const [data,setdata]=useState(null)
-    const getvalue = (row)=>{
+    const [data, setdata] = useState(null)
+    const getvalue = (row) => {
         setdata(row.original.requestUser)
+        setId(row.original._id)
     }
-    const handeldaliver =e=>{
+    const handeldaliver = e => {
         e.preventDefault()
         const status = e.target.status.value
         if (status === 'pending') {
-            return   Swal.fire({
+            return Swal.fire({
                 title: "opps!",
                 text: "status allready set in pending",
                 icon: "error"
@@ -126,8 +132,11 @@ const ManageSingleFood = () => {
                     </div>
                 </div>
             </div>
-            <div>
+            <div className='relative py-14'>
                 <h4 className='text-center font-bold text-4xl my-6'>request for this food</h4>
+                {
+                    ispending && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
+                }
                 <div className='px-3'>
                     <Table className='text-center mx-auto w-full' variant='striped' colorScheme='teal' {...getTableProps()} >
                         <Thead>
@@ -154,6 +163,9 @@ const ManageSingleFood = () => {
                             })}
                         </Tbody>
                     </Table>
+                    {
+                        requestedData.length <= 0 && <h4 className='text-red-400 font-bold text-4xl py-3 text-center'>no request for this food </h4>
+                    }
                 </div>
             </div>
 

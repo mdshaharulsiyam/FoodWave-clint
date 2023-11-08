@@ -22,12 +22,18 @@ const MyFoodRequest = () => {
     });
     return (
         <div className='container mx-auto '>
+            <Helmet>
+                <title>FoodWave | Requested Foods</title>
+            </Helmet>
             <h3 className='text-center font-bold text-4xl py-8'>my Food Request</h3>
-            <div className='grid lg:grid-cols-2 gap-3 '>
+            <div className='grid lg:grid-cols-2 gap-3 relative'>
                 {
-                    requestedData.map(item => <RequestedCard key={item._id} item={item}></RequestedCard>)
+                    isLoading ? <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span> : requestedData.map(item => <RequestedCard key={item._id} item={item}></RequestedCard>)
                 }
             </div>
+            {
+                (requestedData.length <= 0 && !isLoading) && <h4 className='text-red-400 font-bold text-4xl py-3 text-center'>no request food</h4>
+            }
         </div>
     )
 }

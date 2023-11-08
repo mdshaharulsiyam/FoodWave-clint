@@ -1,13 +1,14 @@
 import React from 'react'
-import { useQuery, useMutation,QueryClient } from '@tanstack/react-query';
+import { useQueryClient, useMutation, } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
 const RequestedCard = ({ item }) => {
-    const { username, location, date, requastedDate, donation, status, foodimage,requestUser } = item
+    const { username, location, date, requastedDate, donation, status, foodimage, requestUser } = item
     const axiosrequest = useAxiosConfig()
     const sendDeletRequest = async (query) => {
         axiosrequest.delete(`/myrequest?id=${query.id}&email=${query.email}`);
     };
+    const queryClint= useQueryClient()
     const mutation = useMutation({
         mutationFn: sendDeletRequest,
         onSuccess: () => {
@@ -16,16 +17,27 @@ const RequestedCard = ({ item }) => {
                 text: "Your food has been canceled.",
                 icon: "success"
             });
-            QueryClient.invalidateQueries({ queryKey: ['managerequestdata'] })
+            queryClint.invalidateQueries({ queryKey: ['managesingleFood'] })
         },
     })
-    const cancelRequest =(id)=>{
-        const query ={
-            id,
-            email : requestUser
-        }
-        console.log(query)
-        mutation.mutate(query);
+    const cancelRequest = (id) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const query = {
+                    id,
+                    email: requestUser
+                }
+                mutation.mutate(query);
+            }
+        });
     }
     return (
         <div className='flex justify-start items-center gap-[2%]'>
@@ -40,7 +52,7 @@ const RequestedCard = ({ item }) => {
                 <p>status  <span className='bg-orange-50 font-bold'>{status !== 'Deliverd' ? 'avilable' : status}</span></p>
                 <p>donation : {donation} taka</p>
                 {
-                    status !== 'Deliverd' ? <button onClick={()=>cancelRequest(item._id)} className='bg-red-500 py-1 px-3 text-white rounded-md active:scale-90 transition-all hover:bg-red-300 hover:text-black font-bold'>cancel request</button> : <button className='bg-red-500 py-1 px-3 text-white rounded-md transition-all hover:bg-red-300 hover:text-black font-bold'>Deliverd</button>
+                    status !== 'Deliverd' ? <button onClick={() => cancelRequest(item._id)} className='bg-red-500 py-1 px-3 text-white rounded-md active:scale-90 transition-all hover:bg-red-300 hover:text-black font-bold'>cancel request</button> : <button className='bg-red-500 py-1 px-3 text-white rounded-md transition-all hover:bg-red-300 hover:text-black font-bold'>Deliverd</button>
                 }
             </div>
         </div>

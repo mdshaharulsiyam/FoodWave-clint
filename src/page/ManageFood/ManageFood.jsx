@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { FoodWaveData } from '../../Context/Context';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
-import { useQuery, useMutation } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useTable, useSortBy } from 'react-table';
 import { useMemo } from 'react';
 import { Table, Thead, Tbody, Tr, Image, Th, Td, Tooltip, Button } from '@chakra-ui/react'
@@ -17,8 +17,9 @@ const ManageFood = () => {
     const axiosrequest = useAxiosConfig()
     const [managefoodData, setManageFoodData] = useState([])
     const { email } = userinfo;
-    const { isLoading, err, fooddata, refetch } = useQuery({
-        queryKey: ['manageFood', email],
+    const queryClint = useQueryClient()
+    const { isLoading, err, fooddata } = useQuery({
+        queryKey: ['manageAddedFoods', email],
         queryFn: () =>
             axiosrequest.get(`/myfood?email=${email}`)
                 .then((data) => setManageFoodData(data.data))
@@ -61,17 +62,19 @@ const ManageFood = () => {
     ], []);
     const sendDeletRequest = async (id) => {
         axiosrequest.delete(`/foods?id=${id}`);
-        setsendindData(false)
     };
+    const [Id,setId]=useState(null)
     const mutation = useMutation({
         mutationFn: sendDeletRequest,
         onSuccess: () => {
+            const newData = managefoodData.filter(item=>item._id!==Id)
+            setManageFoodData(newData)
             Swal.fire({
                 title: "Deleted!",
                 text: "Your food has been deleted.",
                 icon: "success"
             });
-            QueryClient.invalidateQueries({ queryKey: ['manageFood'] })
+            queryClint.invalidateQueries({ queryKey: ['manageAddedFoods'] })
         },
     })
     const handleEdit = (row) => {
@@ -90,6 +93,7 @@ const ManageFood = () => {
         }).then((result) => {
             if (result.isConfirmed) {
                 mutation.mutate(row.original._id);
+                setId(row.original._id)
             }
         });
     };
@@ -115,6 +119,9 @@ const ManageFood = () => {
                 <title>FoodWave | Manage Foods</title>
             </Helmet>
             <h3 className='text-center text-3xl mt-16 mb-4 font-bold'>my food list</h3>
+            {
+                isLoading && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
+            }
             <Table className='text-center mx-auto w-full' variant='striped' colorScheme='teal' {...getTableProps()} >
                 <Thead>
                     {headerGroups.map(headerGroup => (
@@ -140,6 +147,9 @@ const ManageFood = () => {
                     })}
                 </Tbody>
             </Table>
+            {
+                managefoodData.length <= 0 && <h4 className='text-red-400 font-bold text-4xl py-3 text-center'>no food data </h4>
+            }
         </div>
     );
 

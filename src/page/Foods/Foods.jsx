@@ -7,6 +7,8 @@ import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import FeaturedFoodsCud from '../../Components/FeaturedFoods/FeaturedFoodsCud'
 import { useForm } from "react-hook-form";
 import { Helmet } from 'react-helmet';
+import { useLoaderData } from 'react-router-dom';
+import './Food.css'
 const Foods = () => {
     const axiosrequest = useAxiosConfig()
     const { register, } = useForm();
@@ -16,6 +18,25 @@ const Foods = () => {
     const [shortitem, setshortitem] = useState('none')
     const [shorby, setsortby] = useState('none')
     const [foodData, setFoodData] = useState([])
+    const [currentpage, setcurrentpage] = useState(0);
+    const [itemPerPage, setitemPerPage] = useState(10);
+    const count = useLoaderData();
+
+    // pagination 
+    const DataPageNumber = (page) => {
+        setcurrentpage(page);
+    }
+
+    const setpagelimit = (e) => {
+        const limit = e.target.value;
+        const limitToNumber = Number(limit);
+        setitemPerPage(limitToNumber);
+        setcurrentpage(0);
+    }
+
+    const totalNumberOfPage = Math.ceil(count && count / itemPerPage);
+    const pages = [...Array(totalNumberOfPage).keys()];
+
     const { isPending, error, data } = useQuery({
         queryKey: ['feturedfoodsData'],
         queryFn: () =>
@@ -23,9 +44,9 @@ const Foods = () => {
                 .then((data) => setSliderData(data.data))
     });
     const { isLoading, err, fooddata, refetch } = useQuery({
-        queryKey: ['foodsData', shortitem, shorby, filtervalue],
+        queryKey: ['foodsData', shortitem, shorby, filtervalue ,currentpage,itemPerPage],
         queryFn: () =>
-            axiosrequest.get(`/foods?shortitem=${shortitem}&shorby=${shorby}&search=${filtervalue}`)
+            axiosrequest.get(`/foods?shortitem=${shortitem}&shorby=${shorby}&search=${filtervalue}&page=${currentpage}&limit=${itemPerPage}`)
                 .then((data) => setFoodData(data.data))
     });
     // handel search
@@ -86,6 +107,16 @@ const Foods = () => {
 
                 </div>
             }
+            <div className='text-center container mx-auto py-10 pagination'>
+                {
+                    pages.map(i => <button key={i} className={`p-3 py-1 rounded-lg active:scale-90 ${currentpage === i && 'selected'}`} onClick={() => DataPageNumber(i)}>{i + 1}</button>)
+                }
+                <select onChange={setpagelimit} className='cursor-pointer mx-2 border'>
+                    <option value="10">10</option>
+                    <option value="20">20</option>
+                    <option value="50">50</option>
+                </select>
+            </div>
         </div>
     )
 }

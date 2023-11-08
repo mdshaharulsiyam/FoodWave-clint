@@ -45,7 +45,8 @@ const Route = () => {
            },
            {
             path:'/foods',
-            element:<Foods></Foods>
+            element:<Foods></Foods>,
+            loader: ()=> fetch('http://localhost:5000/foodcount')
            },
            {
             path:'/details/:id',
