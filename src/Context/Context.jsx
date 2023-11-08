@@ -35,6 +35,7 @@ const Context = ({ children }) => {
                 axiosrequest.post('/jwt',data).then((data)=>console.log('logged in succesfull'))
                 setuserinfo(data)
             } else {
+                // setuserinfo(null)
                 setuserinfo(null)
             }
             setloading(false)
@@ -52,7 +53,7 @@ const Context = ({ children }) => {
                 'success'
             )
         }).catch((error) => {
-            wal.fire(
+            Swal.fire(
                 'opps!!',
                 `somthing wents wronge`,
                 'error'

@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
-import { useNavigate, useParams } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import { MdLocationOn } from 'react-icons/md';
 import { FoodWaveData } from '../../Context/Context';
@@ -20,7 +20,7 @@ const FoodDetails = () => {
                 .then((data) => setSingleFoodData(data.data))
     });
     const { FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, _id } = singlefoodData;
-   
+
     const goback = () => {
         navigate(-1)
     }
@@ -62,13 +62,19 @@ const FoodDetails = () => {
             FoodName, location, Quantity, notes, username, useremail, userephoto, foodimage, date, additionalnote, donation,
             'requestUser': userinfo?.email,
             'requestUserName': userinfo?.displayName,
-            'foodid' : _id,
-            'requastedDate' :formattedDate,
-            'status' :'pending'
+            'foodid': _id,
+            'requastedDate': formattedDate,
+            'status': 'pending'
         }
         mutation.mutate(requestData);
     }
-
+function gologin() {
+    return Swal.fire({
+        icon: "error",
+        title: "Oops...",
+        text: "please login first",
+    });
+}
 
     return (
 
@@ -86,7 +92,7 @@ const FoodDetails = () => {
                     <h1 class="block text-2xl font-bold text-gray-800 sm:text-3xl md:text-3xl lg:text-4xl dark:text-white">{FoodName}</h1>
                     <p class="mt-3 text-lg text-gray-800 dark:text-gray-400">{notes}</p>
                     <span className='text-orange-500 py-2 flex justify-start items-center gap-1 font-extrabold'><MdLocationOn className='text-3xl' /><p>{location}</p></span>
-                        <p>Quantity : {Quantity}</p>
+                    <p>Quantity : {Quantity}</p>
                     <p className='text-xs py-2 font-extrabold'>Expired in {date} <span className='font-semibold pl-5'>status : <span className='font-bold'>{status}</span></span></p>
                     <p>doner info</p>
                     <span className='flex justify-between text-right font-bold items-center gap-1 pt-2'>
@@ -97,9 +103,15 @@ const FoodDetails = () => {
                         </span>
                     </span>
                     <button onClick={goback} className='px-8 text-white py-2 bg-red-500 hover:bg-red-700 rounded-lg active:scale-90 mt-3 font-bold mr-3'>back</button>
-                    <button type="button" class="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" data-hs-overlay="#hs-modal-signin">
-                        send request
-                    </button>
+                    {
+                        userinfo?.email ? <button type="button" class="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" data-hs-overlay="#hs-modal-signin">
+                            send request
+                        </button> : <button onClick={gologin} type="button" class="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
+                            send request
+                        </button>
+                    }
+
+
 
 
                 </div>
@@ -115,9 +127,6 @@ const FoodDetails = () => {
 
                             <div class="mt-5">
 
-
-                                {/* const { FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date } = singlefoodData; */}
-                                {/* <!-- Form --> */}
 
                                 <div class="grid gap-y-4">
                                     {/* <!-- Form Group --> */}
