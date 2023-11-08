@@ -91,9 +91,9 @@ const ManageSingleFood = () => {
         const status = e.target.status.value
         if (status === 'pending') {
             return   Swal.fire({
-                title: "stutas!",
-                text: "set status to pending succesfully",
-                icon: "success"
+                title: "opps!",
+                text: "status allready set in pending",
+                icon: "error"
             });
         }
         const foodid = id
