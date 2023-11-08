@@ -14,7 +14,10 @@ const Header = () => {
             {/* <!-- Topbar --> */}
             <div className=" mx-auto w-full container  px-4 sm:px-6 lg:px-8">
                 <div className="flex items-center justify-between gap-x-5 w-full py-2 ">
-                    <div className='sm:flex justify-start items-center gap-2'>
+                    <div className='flex sm:hidden'>
+
+                    </div>
+                    <div className='sm:flex hidden justify-start items-center gap-2'>
                         <a className='flex justify-start gap-1 items-center font-extralight' href="tel:+8801566026301"><BsFillTelephoneFill /> +8801566026301 </a>
                         <a className='flex justify-start gap-1 items-center font-extralight' href="mailto:shaharulsiyam0273@gmail.com"><MdEmail /> shaharulsiyam0273@gmail.com </a>
                     </div>
@@ -52,6 +55,10 @@ const Header = () => {
                     </div>
                 </div>
                 <div id="navbar-collapse-with-animation" className="hs-collapse hidden overflow-hidden transition-all duration-300 basis-full grow sm:block">
+                    <div className='flex sm:hidden justify-start items-center gap-2'>
+                        <a className='flex justify-start gap-1 items-center font-extralight' href="tel:+8801566026301"><BsFillTelephoneFill /> +8801566026301 </a>
+                        <a className='flex justify-start gap-1 items-center font-extralight' href="mailto:shaharulsiyam0273@gmail.com"><MdEmail /> shaharulsiyam0273@gmail.com </a>
+                    </div>
                     <div className="flex flex-col gap-y-4 gap-x-0 mt-5 sm:flex-row sm:items-center sm:justify-end sm:gap-y-0 sm:gap-x-7 sm:mt-0 sm:pl-7">
                         <NavLink to={'/'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Home</NavLink>
                         <NavLink to={'/foods'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Available Foods</NavLink>

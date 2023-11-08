@@ -46,7 +46,7 @@ const Route = () => {
            {
             path:'/foods',
             element:<Foods></Foods>,
-            loader: ()=> fetch('http://localhost:5000/foodcount')
+            loader: ()=> fetch('https://serverfood.vercel.app/foodcount')
            },
            {
             path:'/details/:id',
