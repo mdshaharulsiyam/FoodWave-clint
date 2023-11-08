@@ -8,8 +8,8 @@ const AddFeedBack = () => {
     const { userinfo } = useContext(FoodWaveData)
     console.log(userinfo)
 
-    const sendDeletRequest = async (query) => {
-        axiosrequest.post(`/feedback`);
+    const sendDeletRequest = async (data) => {
+        axiosrequest.post(`/feedback`,data);
     };
     const mutation = useMutation({
         mutationFn: sendDeletRequest,
@@ -43,8 +43,8 @@ const AddFeedBack = () => {
             ...userinfo,
             feedback
         }
-        // console.log(data)
         mutation.mutate(data);
+        e.target.reset()
     }
     return (
         <div className=' bg-yellow-100 py-10 '>
