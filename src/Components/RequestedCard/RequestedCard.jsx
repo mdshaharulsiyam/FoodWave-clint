@@ -2,8 +2,8 @@ import React from 'react'
 import { useQueryClient, useMutation, } from '@tanstack/react-query';
 import Swal from 'sweetalert2';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
-const RequestedCard = ({ item }) => {
-    const { username, location, date, requastedDate, donation, status, foodimage, requestUser } = item
+const RequestedCard = ({ item ,requestedData ,setrequestedData}) => {
+    const { username, location, date, requastedDate, donation, status, foodimage, requestUser ,_id } = item
     const axiosrequest = useAxiosConfig()
     const sendDeletRequest = async (query) => {
         axiosrequest.delete(`/myrequest?id=${query.id}&email=${query.email}`);
@@ -12,12 +12,14 @@ const RequestedCard = ({ item }) => {
     const mutation = useMutation({
         mutationFn: sendDeletRequest,
         onSuccess: () => {
+            const newData = requestedData.filter(item => item._id !== _id)
+            setrequestedData(newData)
             Swal.fire({
                 title: "cancel request succesfull",
                 text: "Your food has been canceled.",
                 icon: "success"
             });
-            queryClint.invalidateQueries({ queryKey: ['managesingleFood'] })
+            // queryClint.invalidateQueries({ queryKey: ['managesingleFood'] })
         },
     })
     const cancelRequest = (id) => {

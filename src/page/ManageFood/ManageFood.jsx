@@ -74,7 +74,7 @@ const ManageFood = () => {
                 text: "Your food has been deleted.",
                 icon: "success"
             });
-            queryClint.invalidateQueries({ queryKey: ['manageAddedFoods'] })
+            // queryClint.invalidateQueries({ queryKey: ['manageAddedFoods'] })
         },
     })
     const handleEdit = (row) => {

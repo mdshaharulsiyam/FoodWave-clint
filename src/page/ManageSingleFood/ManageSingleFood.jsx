@@ -77,14 +77,14 @@ const ManageSingleFood = () => {
         mutationFn: sendDeletRequest,
         onSuccess: () => {
             console.log(Id)
-            const newData = requestedData.filter(item => item._id !== Id)
-            setrequestedData(newData)
             Swal.fire({
                 title: "Deliverd succesfull",
                 text: "Your food has been Deliverd.",
                 icon: "success"
             });
-            queryClint.invalidateQueries({ queryKey: ['managerequestdata', 'managesingleFood'] })
+           git 
+            setrequestedData(newData)
+            // queryClint.invalidateQueries({ queryKey: ['managerequestdata', 'managesingleFood'] })
         },
     })
     const [data, setdata] = useState(null)
