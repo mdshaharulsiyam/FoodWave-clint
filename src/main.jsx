@@ -1,5 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import 'preline'
 import './index.css'
 import Route from './Route/Route.jsx'
 import Context from './Context/Context.jsx'

@@ -56,7 +56,7 @@ const ManageSingleFood = () => {
         {
             Header: 'status',
             accessor: 'status',
-            Cell: ({ row }) => <><p>{row.values.status}</p> <Button onClick={() => getvalue(row)} className='text-xs uppercase font-serif rounded-md bg-orange-500 hover:scale-105 active:scale-90 py-1 px-2' >change</Button> </>
+            Cell: ({ row }) => <><p>{row.values.status}</p> <Button onClick={() => getvalue(row)} className='text-[10px] font-extrabold font-serif rounded-md bg-orange-500 hover:scale-105 active:scale-90 py-1 px-2' >deliver now</Button> </>
         },
     ], []);
     const {
@@ -91,45 +91,43 @@ const ManageSingleFood = () => {
     const getvalue = async (row) => {
         setdata(row.original.requestUser)
         setId(row.original._id)
-        const { value: status } = await Swal.fire({
-            title: "Select status",
-            input: "select",
-            inputOptions: {
-                pending: "pending",
-                deliver: "deliver",
-            },
-            inputPlaceholder: "Select status",
-            showCancelButton: true,
-            inputValidator: (value) => {
-                return new Promise((resolve) => {
-                    if (value === "deliver") {
-                        resolve();
-                    } else {
-                        resolve("status already set to pending :)");
-                    }
-                });
-            }
-        });
-        if (status) {
-            // Swal.fire(`You selected: ${fruit}`);
-            console.log(status)
-            const foodid = id
-            const email = userinfo?.email
-            const query = {
-                email,
-                data,
-                foodid
-            }
-            mutation.mutate(query);
-        }
+        document.getElementById('my_modal_5').showModal()
     }
 
+const sendrequest =()=>{
+    const foodid = id
+    const email = userinfo?.email
+    const query = {
+        email,
+        data,
+        foodid
+    }
+    console.log(query)
+            mutation.mutate(query);
+}
     return (
         <>
             <div className="bg-yellow-200 bg-opacity-20">
                 <Helmet>
                     <title>FoodWave | Manage Request</title>
                 </Helmet>
+                {/* /// */}
+                {/* Open the modal using document.getElementById('ID').showModal() method */}
+                <dialog id="my_modal_5" className="modal modal-bottom sm:modal-middle p-8 text-center shadow-2xl rounded-3xl ">
+                    <div className="modal-box">
+                        <h3 className="font-bold text-lg">are you sure!!!</h3>
+                        <p className="py-4">you wants to deliverd this food ?</p>
+                        <div className="modal-action">
+                            <form method="dialog" className='text-center'>
+                                {/* if there is a button in form, it will close the modal */}
+                                <button onClick={sendrequest} className="btn px-4 p-1 bg-green-700 text-white font-bold mr-3 rounded-lg hover:bg-green-400 hover:scale-105">okey</button>
+                                <button className="btn px-4 p-1 bg-red-700 text-white font-bold rounded-lg hover:bg-red-400 hover:scale-105">Close</button>
+                            </form>
+                        </div>
+                    </div>
+                </dialog>
+                {/* /// */}
+
                 <div className='container mx-auto flex md:flex-row flex-col-reverse flex-wrap md:justify-center justify-start  gap-2 items-center '>
                     <div className='md:w-[49%] max-h-[400px] w-full flex md:justify-end justify-center items-center overflow-hidden py-2'>
                         <img className='w-full p-4  object-cover' src={foodimage} alt="" />
@@ -181,7 +179,7 @@ const ManageSingleFood = () => {
                     }
                 </div>
             </div>
-         
+
         </>
     )
 }
