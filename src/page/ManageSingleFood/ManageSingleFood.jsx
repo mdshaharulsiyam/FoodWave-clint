@@ -56,7 +56,7 @@ const ManageSingleFood = () => {
         {
             Header: 'status',
             accessor: 'status',
-            Cell: ({ row }) => <><p>{row.values.status}</p> <Button onClick={() => getvalue(row)} className='text-xs uppercase font-serif rounded-md bg-orange-500 hover:scale-105 active:scale-90 py-1 px-2' data-hs-overlay="#hs-modal-recover-account">change</Button> </>
+            Cell: ({ row }) => <><p>{row.values.status}</p> <Button onClick={() => getvalue(row)} className='text-xs uppercase font-serif rounded-md bg-orange-500 hover:scale-105 active:scale-90 py-1 px-2' >change</Button> </>
         },
     ], []);
     const {
@@ -77,7 +77,7 @@ const ManageSingleFood = () => {
         mutationFn: sendDeletRequest,
         onSuccess: () => {
             console.log(Id)
-            const newData = requestedData.filter(item=> item._id!==Id)
+            const newData = requestedData.filter(item => item._id !== Id)
             setrequestedData(newData)
             Swal.fire({
                 title: "Deliverd succesfull",
@@ -88,29 +88,42 @@ const ManageSingleFood = () => {
         },
     })
     const [data, setdata] = useState(null)
-    const getvalue = (row) => {
+    const getvalue = async (row) => {
         setdata(row.original.requestUser)
         setId(row.original._id)
-    }
-    const handeldaliver = e => {
-        e.preventDefault()
-        const status = e.target.status.value
-        if (status === 'pending') {
-            return Swal.fire({
-                title: "opps!",
-                text: "status allready set in pending",
-                icon: "error"
-            });
+        const { value: status } = await Swal.fire({
+            title: "Select status",
+            input: "select",
+            inputOptions: {
+                pending: "pending",
+                deliver: "deliver",
+            },
+            inputPlaceholder: "Select status",
+            showCancelButton: true,
+            inputValidator: (value) => {
+                return new Promise((resolve) => {
+                    if (value === "deliver") {
+                        resolve();
+                    } else {
+                        resolve("status already set to pending :)");
+                    }
+                });
+            }
+        });
+        if (status) {
+            // Swal.fire(`You selected: ${fruit}`);
+            console.log(status)
+            const foodid = id
+            const email = userinfo?.email
+            const query = {
+                email,
+                data,
+                foodid
+            }
+            mutation.mutate(query);
         }
-        const foodid = id
-        const email = userinfo?.email
-        const query = {
-            email,
-            data,
-            foodid
-        }
-        mutation.mutate(query);
     }
+
     return (
         <>
             <div className="bg-yellow-200 bg-opacity-20">
@@ -168,33 +181,7 @@ const ManageSingleFood = () => {
                     }
                 </div>
             </div>
-
-            <div id="hs-modal-recover-account" class="hs-overlay hidden w-full h-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto">
-                <div class="hs-overlay-open:mt-7 hs-overlay-open:opacity-100 hs-overlay-open:duration-500 mt-0 opacity-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto">
-                    <div class="bg-white border border-gray-200 rounded-xl shadow-sm dark:bg-gray-800 dark:border-gray-700">
-                        <div class="p-4 sm:p-7">
-                            <div class="mt-5">
-                                <form onSubmit={handeldaliver}>
-                                    <div class="grid gap-y-4">
-                                        <div>
-                                            <label for="status" class="block text-sm mb-2 dark:text-white">select status</label>
-                                            <div class="relative">
-                                                <select name="status" id="status" class="py-3 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600">
-                                                    <option value="pending">pending</option>
-                                                    <option value="deliver">deliver</option>
-                                                </select>
-                                            </div>
-                                            <p class="hidden text-xs text-red-600 mt-2" id="email-error">Please include a valid email address so we can get back to you</p>
-                                        </div>
-
-                                        <button type="submit" class="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-blue-600 text-white hover:bg-blue-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">deliver</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+         
         </>
     )
 }

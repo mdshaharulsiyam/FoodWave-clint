@@ -1,108 +1,114 @@
-import React, { useContext, useState } from 'react'
-import { Link, Navigate, useNavigate } from 'react-router-dom'
+import React, { useContext, useState } from 'react';
+import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { HiEye, HiEyeOff } from 'react-icons/hi';
 import { FoodWaveData } from '../../Context/Context';
 import Swal from 'sweetalert2';
 import { Helmet } from 'react-helmet';
+import { GoogleAuthProvider } from 'firebase/auth'; // Import GoogleAuthProvider from Firebase
 
 const Login = () => {
-    // context data 
-    const { loginUser, loading, setloading, userinfo, loginWithGoogle } = useContext(FoodWaveData)
-    if (userinfo?.displayName) {
-        return <Navigate to={'/'}></Navigate>
-    } else {
-        //state 
-        const [showbutton, setShowBtn] = useState(true)
-        const navigate = useNavigate()
-        //login with google 
-        const signin = () => {
-            loginWithGoogle()
-                .then((result) => {
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
-                    const user = result.user;
-                    if (user) {
-                        Swal.fire({
-                            position: 'top-end',
-                            icon: 'success',
-                            title: 'logged in sucessful',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    }
+    const {
+        loginUser,
+        loading,
+        setloading,
+        userinfo,
+        loginWithGoogle,
+        setuserupdate,
+        userupdate,
+    } = useContext(FoodWaveData);
+    const navigate = useNavigate();
+    const location = useLocation();
 
-                }).catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    const email = error.customData.email;
-                    const credential = GoogleAuthProvider.credentialFromError(error);
-                    Swal.fire(
-                        'opps!!',
-                        `${errorMessage}`,
-                        'error'
-                    )
+    const [showbutton, setShowBtn] = useState(true);
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
-                });
-        }
-        //show and hide password 
-        const showPassword = (e) => {
-            const passwordField = document.querySelector('#hs-hero-password-2')
-            if (passwordField.type === 'password') {
-                passwordField.type = 'text'
-                setShowBtn(false)
-            } else {
-                passwordField.type = 'password'
-                setShowBtn(true)
-            }
-        }
-        const formSubmit = e => {
-            setloading(true)
-            e.preventDefault();
-            const password = e.target.password.value;
-            const email = e.target.email.value;
-            loginUser(email, password)
-                .then((userCredential) => {
-                    // Signed in 
-                    const user = userCredential.user;
+    const signin = () => {
+        loginWithGoogle()
+            .then((result) => {
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const user = result.user;
+                if (user) {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
-                        title: 'logged in sucessful',
+                        title: 'Logged in successfully',
                         showConfirmButton: false,
-                        timer: 1500
-                    })
-                    e.target.reset()
-                    setloading(false)
-                    navigate('/')
-                })
-                .catch((error) => {
-                    const errorCode = error.code;
-                    const errorMessage = error.message;
-                    Swal.fire(
-                        'opps!!',
-                        `${errorMessage}`,
-                        'error'
-                    )
-                    setloading(false)
+                        timer: 1500,
+                    });
+                }
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                Swal.fire('Oops!', `${errorMessage}`, 'error');
+            });
+    };
+
+    const showPassword = () => {
+        const passwordField = document.querySelector('#hs-hero-password-2');
+        passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
+        setShowBtn(!showbutton);
+    };
+
+    const formSubmit = (e) => {
+        e.preventDefault();
+        setloading(true);
+
+        loginUser(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Logged in successfully',
+                    showConfirmButton: false,
+                    timer: 1500,
                 });
+                setEmail('');
+                setPassword('');
+                setloading(false);
+                setuserupdate(!userupdate);
+                navigate('/');
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                Swal.fire('Oops!', `${errorMessage}`, 'error');
+                setloading(false);
+            });
+    };
+
+    if (userinfo?.displayName) {
+        Swal.fire({
+            position: 'top-end',
+            icon: 'success',
+            title: 'Logged in successfully',
+            showConfirmButton: false,
+            timer: 1500,
+        });
+
+        if (location.state) {
+            return navigate(`${location.state}`);
+        } else {
+            return <Navigate to={'/'} />;
         }
+    } else {
         return (
-            <div className='bg-black bg-opacity-5 py-8 relative'>
+            <div className="bg-black bg-opacity-5 py-8 relative">
                 <Helmet>
                     <title>FoodWave | login</title>
                 </Helmet>
-                {
-                    loading && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
-                }
+                {loading && (
+                    <span className="absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]">
+                        <div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div>
+                    </span>
+                )}
                 <div className="container mx-auto max-w-3xl">
-                    {/* <!-- Title --> */}
                     <h4 className="text-3xl text-gray-800 font-bold md:text-4xl md:leading-tight lg:text-5xl lg:leading-tight dark:text-gray-200">
-                        Ready to Dive In?   <span className="text-blue-600 dark:text-blue-500">LogIn</span>  Here!
+                        Ready to Dive In? <span className="text-blue-600 dark:text-blue-500">LogIn</span> Here!
                     </h4>
                     <p className="mt-3 text-base text-gray-500">
                         Sign in to access your account and unlock a world of personalized content and services. Your adventure starts here. If you're new, join us and be part of our community.
                     </p>
-                    {/* <!-- End Title --> */}
 
                     <div className="mt-8 grid">
                         <button onClick={signin} type="button" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border font-medium bg-white text-gray-700 shadow-sm align-middle hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-white focus:ring-blue-600 transition-all text-sm sm:p-4 dark:bg-slate-900 dark:hover:bg-slate-800 dark:border-gray-700 dark:text-gray-400 dark:hover:text-white dark:focus:ring-offset-gray-800">
@@ -116,32 +122,67 @@ const Login = () => {
                         </button>
                     </div>
 
-                    <div className="py-6 flex items-center text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:mr-6 after:flex-[1_1_0%] after:border-t after:ml-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">Or</div>
+                    <div className="py-6 flex items-center text-gray-400 uppercase before:flex-[1_1_0%] before:border-t before:mr-6 after:flex-[1_1_0%] after:border-t after:ml-6 dark:text-gray-500 dark:before:border-gray-600 dark:after:border-gray-600">
+                        Or
+                    </div>
 
-                    {/* <!-- Form --> */}
                     <form onSubmit={formSubmit}>
                         <div className="mb-4">
-                            <label for="hs-hero-email-2" className="block text-sm font-medium dark:text-white"><span className="sr-only">Email address</span></label>
-                            <input type="email" name='email' id="hs-hero-email-2" className="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Email address" required />
+                            <label htmlFor="hs-hero-email-2" className="block text-sm font-medium dark:text-white">
+                                <span className="sr-only">Email address</span>
+                            </label>
+                            <input
+                                type="email"
+                                name="email"
+                                id="hs-hero-email-2"
+                                className="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                                placeholder="Email address"
+                                required
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                            />
                         </div>
 
                         <div className="mb-4">
-                            <label for="hs-hero-password-2" className="block text-sm font-medium dark:text-white relative"><span className="sr-only">Password</span>
-                                <input type="password" name='password' id="hs-hero-password-2" className="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required />
-                                <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
+                            <label htmlFor="hs-hero-password-2" className="block text-sm font-medium dark:text-white relative">
+                                <span className="sr-only">Password</span>
+                                <input
+                                    type={showbutton ? 'password' : 'text'}
+                                    name="password"
+                                    id="hs-hero-password-2"
+                                    className="py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400"
+                                    placeholder="Password"
+                                    required
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                />
+                                <span
+                                    onClick={showPassword}
+                                    className="text-2xl cursor-pointer absolute right-4 top-[50%] -translate-y-[50%]"
+                                >
+                                    {showbutton ? <HiEyeOff /> : <HiEye />}
+                                </span>
+                            </label>
                         </div>
 
                         <div className="grid">
-                            <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">login</button>
+                            <button
+                                type="submit"
+                                className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4"
+                            >
+                                Login
+                            </button>
                         </div>
                     </form>
-                    <p className='my-2 font-semibold'>don't have an account ? <Link className=' text-blue-800' to={'/signup'}> signup</Link></p>
-
-                    {/* <!-- End Form --> */}
+                    <p className="my-2 font-semibold">
+                        Don't have an account? <Link className="text-blue-800" to="/signup">
+                            Signup
+                        </Link>
+                    </p>
                 </div>
             </div>
-        )
+        );
     }
-}
+};
 
-export default Login
+export default Login;

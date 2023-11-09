@@ -26,7 +26,7 @@ const Header = () => {
                             loading && <span className='absolute top-[50%] left-[50%] -translate-x-[50%] -translate-y-[50%]'><div className="w-8 h-8 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div></span>
                         }
                         {
-                            userinfo?.displayName ? <div className='flex justify-end items-center gap-1'>
+                            userinfo?.email ? <div className='flex justify-end items-center gap-1'>
                                 <h4>{userinfo?.displayName}</h4>
                                 <img className='w-10 h-10 rounded-full' src={userinfo?.photoURL} alt="profile" />
                                 <button onClick={logOutUser} className="py-2 px-3 inline-flex justify-center items-center gap-2 rounded-md border-2 border-gray-200 font-semibold text-blue-600 hover:bg-blue-50 hover:border-blue-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:hover:bg-blue-600/[.3] dark:border-slate-700 dark:hover:border-blue-500 dark:hover:text-blue-500">log out</button>
@@ -63,7 +63,7 @@ const Header = () => {
                         <NavLink to={'/'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Home</NavLink>
                         <NavLink to={'/foods'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400" >Available Foods</NavLink>
                         {
-                            userinfo?.displayName && <>
+                            userinfo?.email && <>
                                 <NavLink to={'/addfood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400">Add Food</NavLink>
                                 <NavLink to={'/manageFood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400">Manage Foods</NavLink>
                                 <NavLink to={'/requestedFood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400"> Requestet Food</NavLink></>

@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import { useContext, useState } from 'react'
 import { useParams } from 'react-router-dom'
@@ -9,6 +9,7 @@ import { FoodWaveData } from '../../Context/Context'
 const UpdateFood = () => {
     const { userinfo } = useContext(FoodWaveData)
     const param = useParams()
+    const queryClient = useQueryClient()
     const axiosrequest = useAxiosConfig()
     const [singlefoodData, setSingleFoodData] = useState([])
     const [sendingData, setsendindData] = useState(false)
@@ -20,15 +21,15 @@ const UpdateFood = () => {
             axiosrequest.get(`/singlefood?id=${id}`)
                 .then((data) => setSingleFoodData(data.data))
     });
-    // const { FoodName, location, Quantity, notes, username, useremail, userephoto, status, foodimage, date, _id } = singlefoodData;
+    const updateform = document.getElementById('updateform')
     const sendDataToServer = async (formData) => {
         axiosrequest.put(`/foods?id=${id}`, formData);
-        setsendindData(false)
-        addfoodform.reset()
     };
     const mutation = useMutation({
         mutationFn: sendDataToServer,
         onSuccess: () => {
+            setsendindData(false)
+            updateform.reset()
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -36,49 +37,42 @@ const UpdateFood = () => {
                 showConfirmButton: false,
                 timer: 1500
             })
-            QueryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
+            queryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
         },
     })
     const formSubmit = (data) => {
         const formData = new FormData()
-        const { newfoodimage, date, location, FoodName, Quantity, notes } = data
-        // setsendindData(true)
+        let { newfoodimage, date, location, FoodName, Quantity, notes, foodimage } = data
+        setsendindData(true)
         if (date === '') {
-            formData.append('date', singlefoodData?.date)
+            date = singlefoodData?.date
         } else {
-            const currentDate = new Date()
+
             const insertedDate = new Date(date);
-            if (currentDate > insertedDate) {
-                return Swal.fire(
-                    'opps!!',
-                    `Expired Date should not be passed date`,
-                    'error'
-                )
-            }
             const year = insertedDate.getUTCFullYear();
             const month = (insertedDate.getUTCMonth() + 1).toString().padStart(2, "0");
             const day = insertedDate.getUTCDate().toString().padStart(2, "0");
             const formattedDate = `${year}-${month}-${day}`;
-            console.log(date,insertedDate,formattedDate)
-            formData.append('date', formattedDate)
+            console.log(date, insertedDate, formattedDate)
+            date = formattedDate
 
         }
-        FoodName === '' ? formData.append('FoodName', singlefoodData?.FoodName) : formData.append('FoodName', FoodName)
-        location === '' ? formData.append('location', singlefoodData?.location) : formData.append('location', location)
-        Quantity === '' ? formData.append('Quantity', singlefoodData?.Quantity) : formData.append('Quantity', Quantity)
-        notes === '' ? formData.append('notes', singlefoodData?.notes) : formData.append('notes', notes)
-       
-        formData.append('username', userinfo?.displayName)
-        formData.append('useremail', userinfo?.email)
-        formData.append('userephoto', userinfo?.photoURL)
-        formData.append('status', 'avaulable')
-        if (!newfoodimage.length <= 0) {
-            const file = newfoodimage[0]
-            formData.append('file', file)
-        } else {
-            formData.append('foodimage', singlefoodData?.foodimage)
+        FoodName === '' ? FoodName = singlefoodData?.FoodName : FoodName = FoodName
+        location === '' ? location = singlefoodData?.location : location = location
+        Quantity === '' ? Quantity = singlefoodData?.Quantity : Quantity = Quantity
+        foodimage === '' ? foodimage = singlefoodData?.foodimage : foodimage = foodimage
+        notes === '' ? notes = singlefoodData?.notes : notes = notes
+        const newData = {
+            FoodName, location, Quantity, foodimage, foodimage, notes, date,
+            'username': userinfo?.displayName,
+            'useremail': userinfo?.email,
+            'userephoto': userinfo?.photoURL,
+            'status': 'avaulable'
         }
-        mutation.mutate(formData);
+
+        console.log(newData)
+        mutation.mutate(newData);
+        /////////////////////
     }
 
     return (
@@ -97,7 +91,7 @@ const UpdateFood = () => {
 
                 {/* <!-- End Title --> */}
                 {/* <!-- Form --> */}
-                <form id='addfoodform' onSubmit={handleSubmit(formSubmit)}>
+                <form id='updateform' onSubmit={handleSubmit(formSubmit)}>
 
                     <div className="mb-4">
                         <label htmlFor="location">Food Name</label>
@@ -132,9 +126,10 @@ const UpdateFood = () => {
                         <textarea className='py-3 px-4 h-36 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("notes",)} defaultValue={singlefoodData?.notes} />
                     </div>
                     <div className="mb-4">
-                        <label for="profile-pic">Choose a new Food Image</label>
-                        <input type="file" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" {...register("newfoodimage",)} placeholder="Choose Food Image" />
+                        <label htmlFor="location">image url</label>
+                        <input className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage",)} defaultValue={singlefoodData?.foodimage} />
                     </div>
+
                     <div className="grid">
                         <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">add food</button>
                     </div>

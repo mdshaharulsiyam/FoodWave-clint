@@ -9,7 +9,9 @@ const Context = ({ children }) => {
     // states 
     const [userinfo, setuserinfo] = useState(null)
     const [loading, setloading] = useState(true)
+    const [userupdate, setuserupdate] = useState(true)
     const axiosrequest = useAxiosConfig()
+    console.log(userupdate)
     // create user with email and password
     const createNewUser = (email, password) => {
         return createUserWithEmailAndPassword(auth, email, password)
@@ -43,7 +45,7 @@ const Context = ({ children }) => {
                 unsubscribe()
             }
         });
-    }, [])
+    }, [userupdate])
     // logout user 
     const logOutUser = () => {
         signOut(auth).then(() => {
@@ -62,7 +64,7 @@ const Context = ({ children }) => {
     }
     //context data
     const contextData = {
-        createNewUser, loginUser, logOutUser, userinfo, loading, setloading,loginWithGoogle,
+        createNewUser, loginUser, logOutUser, userinfo, loading, setloading,loginWithGoogle,setuserupdate
     }
     return (
         <FoodWaveData.Provider value={contextData}>

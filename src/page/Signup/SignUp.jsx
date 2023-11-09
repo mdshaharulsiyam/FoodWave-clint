@@ -7,13 +7,12 @@ import { FoodWaveData } from '../../Context/Context';
 import { updateProfile } from "firebase/auth";
 import { Helmet } from 'react-helmet';
 const SignUp = () => {
-    const axiosrequest = useAxiosConfig()
     const [showbutton, setShowBtn] = useState(true)
     //context data 
     const { createNewUser, loading, setloading, userinfo } = useContext(FoodWaveData)
     // chack already loading or not 
-    if (userinfo?.displayName) {
-        return <Navigate to={'/'}></Navigate>
+    if (userinfo?.email) {
+        return <Navigate to={'/login'}></Navigate>
     } else {
         // password show hide
         const showPassword = (e) => {
@@ -34,7 +33,7 @@ const SignUp = () => {
             const password = e.target.password.value;
             const email = e.target.email.value;
             const username = e.target.username.value;
-            const file = e.target.file.files[0];
+            const profile = e.target.profile.value;
             const passwordLength = /.{6,}/;
             const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
             const uppercase = /[A-Z]/;
@@ -61,43 +60,28 @@ const SignUp = () => {
                 createNewUser(email, password)
                     .then((userCredential) => {
                         const user = userCredential.user;
-                        const formData = new FormData()
-                        formData.append('file', file)
-                        formData.append('email', email)
-                        axiosrequest.post('/user', formData).then((data) => {
-                            setprofilePic(data.data)
-                            console.log(data.data.filename)
-                            updateProfile(user, {
-                                displayName: username, photoURL: data.data.filename
-                            }).then(() => {
-                                Swal.fire({
-                                    position: 'top-end',
-                                    icon: 'success',
-                                    title: 'user created succesfully',
-                                    showConfirmButton: false,
-                                    timer: 1500
-                                })
-                                setloading(false)
-                                e.target.reset()
-                            }).catch((error) => {
-                                Swal.fire(
-                                    'opps!!',
-                                    `unable to update profile`,
-                                    'error'
-                                )
-                                setloading(false)
-                            });
-                        })
-                    }).catch((err) => {
-                        Swal.fire(
-                            'opps!!',
-                            `unable to update profile picture`,
-                            'error'
-                        )
-                        setloading(false)
-                    })
+                        updateProfile(user, {
+                            displayName: username, photoURL: profile
+                        }).then(() => {
+                            Swal.fire({
+                                position: 'top-end',
+                                icon: 'success',
+                                title: 'user created succesfully',
+                                showConfirmButton: false,
+                                timer: 1500
+                            })
+                            setloading(false)
+                            e.target.reset()
+                        }).catch((error) => {
+                            Swal.fire(
+                                'opps!!',
+                                `unable to update profile`,
+                                'error'
+                            )
+                            setloading(false)
+                        });
 
-                    .catch((error) => {
+                    }).catch((error) => {
                         const errorCode = error.code;
                         const errorMessage = error.message;
                         Swal.fire(
@@ -143,11 +127,12 @@ const SignUp = () => {
                                 <input type="password" name='password' id="hs-hero-password-2" className="py-3 font-sans px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="Password" required />
                                 <span onClick={showPassword} className='text-2xl cursor-pointer active:scale-9 absolute right-4 top-[50%] -translate-y-[50%]'>{showbutton ? <HiEyeOff></HiEyeOff> : <HiEye></HiEye>}</span></label>
                         </div>
-                        <div className="mb-4">
-                            <label for="profile-pic">Choose Profile Pic:</label>
-                            <input type="file" name='file' id="profile-pic" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" required />
-                        </div>
 
+                        <div className="mb-4">
+                            <label for="hs-hero-password-2" className="block text-sm font-medium dark:text-white relative"><span className="sr-only">profile pic url</span>
+                                <input type="text" name='profile' id="hs-hero-password-2" className="py-3 font-sans px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="profile pic url" required />
+                            </label>
+                        </div>
                         <div className="grid">
                             <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">sign up</button>
                         </div>

@@ -25,6 +25,13 @@ const AddFeedBack = () => {
     const sendfeedback = (e) => {
         e.preventDefault();
         const feedback = e.target.feedback.value;
+        if (!userinfo?.email) {
+            return Swal.fire({
+                title: "opps!!",
+                text: "you need to login for send feedback",
+                icon: "error"
+            });
+        }
         if (feedback === '') {
             return Swal.fire({
                 title: "opps!!",
@@ -39,6 +46,7 @@ const AddFeedBack = () => {
                 icon: "error"
             });
         }
+    
         const data = {
             ...userinfo,
             feedback

@@ -70,14 +70,17 @@ const FoodDetails = () => {
         mutation.mutate(requestData);
         e.target.reset()
     }
-function gologin() {
-    return Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "please login first",
-    });
+    function gologin() {
+        return Swal.fire({
+            icon: "error",
+            title: "Oops...",
+            text: "please login first",
+        });
+    }
+const modalbtn =document.getElementById('modalbtn')
+const close =()=>{
+    modalbtn.click()
 }
-
     return (
 
         <div className="max-w-[85rem] mx-auto px-4 sm:px-6 lg:px-8">
@@ -105,7 +108,7 @@ function gologin() {
                     </span>
                     <button onClick={goback} className='px-8 text-white py-2 bg-red-500 hover:bg-red-700 rounded-lg active:scale-90 mt-3 font-bold mr-3'>back</button>
                     {
-                        userinfo?.email ? <button type="button" className="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" data-hs-overlay="#hs-modal-signin">
+                        userinfo?.email ? <button type="button" className="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600" onClick={() => document.getElementById('my_modal_5').showModal()}>
                             send request
                         </button> : <button onClick={gologin} type="button" className="px-8 py-[9px] bg-orange-500 rounded-lg active:scale-90 mt-3 font-bold inline-flex items-center gap-x-2 text-sm  border border-transparent text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">
                             send request
@@ -116,6 +119,92 @@ function gologin() {
 
 
                 </div>
+                {/* Open the modal using document.getElementById('ID').showModal() method */}
+                <dialog id="my_modal_5" className="modal w-1/2 p-6 rounded-3xl modal-bottom sm:modal-middle">
+                    <div className="modal-box">
+                        <div className="modal-action">
+                            <form method="dialog" className='flex justify-end'>
+                                <button id='modalbtn' className="btn bg-red-500 py-2 px-8 font-bold text-white rounded-md hover:scale-110 transition-all hover:text-black">Close</button>
+                            </form>
+                        </div>
+                        <div className="text-center">
+                            <h2 className="block text-2xl font-bold text-gray-800 dark:text-gray-200">request form</h2>
+                        </div>
+                        <div className="grid gap-y-4">
+                            {/* <!-- Form Group --> */}
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Food Name</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={FoodName} id="email" name="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <div className="relative text-center">
+                                    <img className='mx-auto' src={foodimage} alt="" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Food Id</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={_id} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Food Donator email</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={useremail} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Food Donator Name</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={username} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">User email</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={userinfo?.email} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">request Date</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={requestDate} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Pickup Location</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={location} id="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+                            <div>
+                                <label for="email" className="block text-sm mb-2 dark:text-white">Expire Date</label>
+                                <div className="relative">
+                                    <input type="text" disabled defaultValue={date} id="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                </div>
+                            </div>
+
+                            <form onSubmit={sendRequest}>
+                                <div>
+                                    <label for="email" className="block text-sm mb-2 dark:text-white"> Additional Notes</label>
+                                    <div className="relative">
+                                        <textarea type="text" name="additionalnote" className="py-3 h-24 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                    </div>
+                                </div>
+                                <div>
+                                    <label for="email" className="block text-sm mb-2 dark:text-white">Donation Money</label>
+                                    <div className="relative">
+                                        <input type="number" defaultValue={0} placeholder='if want you can donate' name='donation' className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
+                                    </div>
+                                </div>
+                                <button onClick={close} id='close' type="submit" className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-orange-600 mt-2 text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">request </button>
+                            </form>
+                        </div>
+
+                    </div>
+                </dialog>
             </div>
             {/* <!-- End Grid --> */}
             <div id="hs-modal-signin" className="hs-overlay hidden w-full h-full fixed top-0 start-0 z-[60] overflow-x-hidden overflow-y-auto">
@@ -127,80 +216,6 @@ function gologin() {
                             </div>
 
                             <div className="mt-5">
-
-
-                                <div className="grid gap-y-4">
-                                    {/* <!-- Form Group --> */}
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Food Name</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={FoodName} id="email" name="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <div className="relative text-center">
-                                            <img className='mx-auto' src={foodimage} alt="" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Food Id</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={_id} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Food Donator email</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={useremail} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Food Donator Name</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={username} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">User email</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={userinfo?.email} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">request Date</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={requestDate} id="email" name="id" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Pickup Location</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={location} id="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="email" className="block text-sm mb-2 dark:text-white">Expire Date</label>
-                                        <div className="relative">
-                                            <input type="text" disabled defaultValue={date} id="email" className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                        </div>
-                                    </div>
-
-                                    <form onSubmit={sendRequest}>
-                                        <div>
-                                            <label for="email" className="block text-sm mb-2 dark:text-white"> Additional Notes</label>
-                                            <div className="relative">
-                                                <textarea type="text" name="additionalnote" className="py-3 h-24 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                            </div>
-                                        </div>
-                                        <div>
-                                            <label for="email" className="block text-sm mb-2 dark:text-white">Donation Money</label>
-                                            <div className="relative">
-                                                <input type="number" defaultValue={0} placeholder='if want you can donate' name='donation' className="py-3 border-2 px-4 block w-full border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" />
-                                            </div>
-                                        </div>
-                                        <button type="submit" className="w-full py-3 px-4 inline-flex justify-center items-center gap-x-2 text-sm font-semibold rounded-lg border border-transparent bg-orange-600 mt-2 text-white hover:bg-orange-700 disabled:opacity-50 disabled:pointer-events-none dark:focus:outline-none dark:focus:ring-1 dark:focus:ring-gray-600">request </button>
-                                    </form>
-                                </div>
 
                                 {/* <!-- End Form --> */}
                             </div>

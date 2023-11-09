@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import { FoodWaveData } from '../Context/Context'
-import { Navigate } from 'react-router-dom'
+import { Navigate, useLocation } from 'react-router-dom'
 
 const PrivetRoute = ({children}) => {
     const { loading ,userinfo } = useContext(FoodWaveData)
@@ -10,7 +10,8 @@ const PrivetRoute = ({children}) => {
         if (userinfo?.displayName) {
            return children
         }else{
-            return <Navigate to={'/login'}></Navigate>
+            const localtion = useLocation()
+            return <Navigate state={`${localtion.pathname}`} to={'/login'}></Navigate>
         }
     }
   

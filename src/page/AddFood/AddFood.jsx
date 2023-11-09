@@ -10,11 +10,12 @@ const AddFood = () => {
     const [sendingData, setsendindData] = useState(false)
     const axiosrequest = useAxiosConfig()
     const { register, handleSubmit, } = useForm();
-    const addfoodform =document.getElementById('addfoodform')
+    const addfoodform = document.getElementById('addfoodform')
     // send post request using axios 
-    const sendDataToServer = async (formData) => {
-        const res = await axiosrequest.post('/foods', formData);
+    const sendDataToServer = async (newData) => {
+        const res = await axiosrequest.post(`/foods?useremail=${userinfo?.email}`, newData);
         setsendindData(false)
+        console.log(newData)
         addfoodform.reset()
         Swal.fire({
             position: 'top-end',
@@ -35,40 +36,23 @@ const AddFood = () => {
     //   get form data 
     const formSubmit = (data) => {
         setsendindData(true)
-        const { FoodName, date, location, foodimage, Quantity, notes } = data
-        const currentDate = new Date()
-        const insertedDate = new Date(date);
-        if (currentDate > insertedDate) {
-            return Swal.fire(
-                'opps!!',
-                `Expired Date should not be passed date`,
-                'error'
-            )
-        }
-        if (foodimage.length <= 0) {
-            return Swal.fire(
-                'opps!!',
-                `please select image for food`,
-                'error'
-            )
-        }
+        const { date} = data
+        console.log(data)
+        const insertedDate = new Date(date);       
         const year = insertedDate.getUTCFullYear();
         const month = (insertedDate.getUTCMonth() + 1).toString().padStart(2, "0");
         const day = insertedDate.getUTCDate().toString().padStart(2, "0");
         const formattedDate = `${year}-${month}-${day}`;
-        const file = foodimage[0]
-        const formData = new FormData()
-        formData.append('file', file)
-        formData.append('FoodName', FoodName)
-        formData.append('location', location)
-        formData.append('Quantity', Quantity)
-        formData.append('notes', notes)
-        formData.append('username', userinfo?.displayName)
-        formData.append('useremail', userinfo?.email)
-        formData.append('userephoto', userinfo?.photoURL)
-        formData.append('status', 'avaulable')
-        formData.append('date', formattedDate)
-        mutation.mutate(formData);
+        const newData = {
+            ...data,
+            'userephoto': userinfo?.photoURL,
+            'useremail': userinfo?.email,
+            'username': userinfo?.displayName,
+            'date': formattedDate,
+            'status' : 'avaulable'
+
+        }
+            mutation.mutate(newData);
     }
 
     return (
@@ -117,14 +101,16 @@ const AddFood = () => {
                         <label htmlFor="location">Pickup Location</label>
                         <input className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("location", { required: 'plese sellect food name', })} placeholder="Pickup Location" />
                     </div>
+
+                    <div className="mb-4">
+                        <label htmlFor="location">image url</label>
+                        <input className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage", { required: 'plese sellect food name', })} placeholder="food image url" />
+                    </div>
                     <div className="mb-4">
                         <label htmlFor="location">Additional Notes</label>
                         <textarea className='py-3 px-4 h-36 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("notes", { required: 'plese sellect food name', })} placeholder="Additional Notes" />
                     </div>
-                    <div className="mb-4">
-                        <label for="profile-pic">Choose Food Image</label>
-                        <input type="file" className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-500 file:text-white hover:file:bg-blue-600" {...register("foodimage",)} placeholder="Choose Food Image" />
-                    </div>
+
                     <div className="grid">
                         <button type="submit" className="py-3 px-4 inline-flex justify-center items-center gap-2 rounded-md border border-transparent font-semibold bg-blue-500 text-white hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-all text-sm dark:focus:ring-offset-gray-800 sm:p-4">add food</button>
                     </div>

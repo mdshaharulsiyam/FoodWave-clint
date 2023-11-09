@@ -32,7 +32,7 @@ const Route = () => {
            },
            {
             path:'/requestedFood',
-            element:<MyFoodRequest><AddFood></AddFood></MyFoodRequest>
+            element:<PrivetRoute><MyFoodRequest></MyFoodRequest></PrivetRoute>
            },
        
            {
@@ -50,7 +50,7 @@ const Route = () => {
            },
            {
             path:'/details/:id',
-            element:<FoodDetails></FoodDetails>
+            element:<PrivetRoute><FoodDetails></FoodDetails></PrivetRoute>
            },
            {
             path:'/manageFood',
