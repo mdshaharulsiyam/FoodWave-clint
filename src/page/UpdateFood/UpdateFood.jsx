@@ -29,7 +29,7 @@ const UpdateFood = () => {
         mutationFn: sendDataToServer,
         onSuccess: () => {
             setsendindData(false)
-            updateform.reset()
+            // updateform.reset()
             Swal.fire({
                 position: 'top-end',
                 icon: 'success',
@@ -37,7 +37,7 @@ const UpdateFood = () => {
                 showConfirmButton: false,
                 timer: 1500
             })
-            queryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
+            // queryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
         },
     })
     const formSubmit = (data) => {
