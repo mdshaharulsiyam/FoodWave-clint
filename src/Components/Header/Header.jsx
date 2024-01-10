@@ -66,7 +66,7 @@ const Header = () => {
                             userinfo?.email && <>
                                 <NavLink to={'/addfood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400">Add Food</NavLink>
                                 <NavLink to={'/manageFood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400">Manage Foods</NavLink>
-                                <NavLink to={'/requestedFood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400"> Requestet Food</NavLink></>
+                                <NavLink to={'/requestedFood'} className="font-medium text-gray-800 hover:text-gray-500 sm:py-6 dark:text-gray-200 dark:hover:text-gray-400"> Requested Food</NavLink></>
                         }
 
                     </div>

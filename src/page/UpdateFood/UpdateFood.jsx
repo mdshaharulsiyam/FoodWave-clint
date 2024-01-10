@@ -1,11 +1,12 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig'
 import { useContext, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { Helmet } from 'react-helmet'
 import { useForm } from "react-hook-form";
 import { FoodWaveData } from '../../Context/Context'
+import axios from 'axios'
 const UpdateFood = () => {
     const { userinfo } = useContext(FoodWaveData)
     const param = useParams()
@@ -25,10 +26,12 @@ const UpdateFood = () => {
     const sendDataToServer = async (formData) => {
         axiosrequest.put(`/foods?id=${id}`, formData);
     };
+    const navigate = useNavigate()
     const mutation = useMutation({
         mutationFn: sendDataToServer,
         onSuccess: () => {
             setsendindData(false)
+            navigate('/manageFood')
             // updateform.reset()
             Swal.fire({
                 position: 'top-end',
@@ -40,9 +43,9 @@ const UpdateFood = () => {
             // queryClient.invalidateQueries({ queryKey: ['singlefoodsData'] })
         },
     })
-    const formSubmit = (data) => {
+    const formSubmit = async (data) => {
         const formData = new FormData()
-        let { newfoodimage, date, location, FoodName, Quantity, notes, foodimage } = data
+        let { date, location, FoodName, Quantity, notes, foodimage } = data
         setsendindData(true)
         if (date === '') {
             date = singlefoodData?.date
@@ -60,19 +63,37 @@ const UpdateFood = () => {
         FoodName === '' ? FoodName = singlefoodData?.FoodName : FoodName = FoodName
         location === '' ? location = singlefoodData?.location : location = location
         Quantity === '' ? Quantity = singlefoodData?.Quantity : Quantity = Quantity
-        foodimage === '' ? foodimage = singlefoodData?.foodimage : foodimage = foodimage
         notes === '' ? notes = singlefoodData?.notes : notes = notes
-        const newData = {
-            FoodName, location, Quantity, foodimage, foodimage, notes, date,
-            'username': userinfo?.displayName,
-            'useremail': userinfo?.email,
-            'userephoto': userinfo?.photoURL,
-            'status': 'avaulable'
-        }
+        if (foodimage.length > 0) {
+            const res = await axios.post("https://api.imgbb.com/1/upload?key=5201d474546c521dc75dd9c96eea7a84", { image: foodimage[0] }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            if (res.data.success) {
+                foodimage = res.data.data.display_url
+                const newData = {
+                    FoodName, location, Quantity, foodimage, foodimage, notes, date,
+                    'username': userinfo?.displayName,
+                    'useremail': userinfo?.email,
+                    'userephoto': userinfo?.photoURL,
+                    'status': 'avaulable'
+                }
 
-        console.log(newData)
-        mutation.mutate(newData);
-        /////////////////////
+                console.log(newData)
+                mutation.mutate(newData);
+                console.log(foodimage);
+            } else {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong!",
+                    footer: 'unable to update image'
+                });
+            }
+        }
+        // foodimage === '' ? foodimage = singlefoodData?.foodimage : foodimage = foodimage
+
     }
 
     return (
@@ -127,7 +148,7 @@ const UpdateFood = () => {
                     </div>
                     <div className="mb-4">
                         <label htmlFor="location">image url</label>
-                        <input className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage",)} defaultValue={singlefoodData?.foodimage} />
+                        <input type='file' className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage",)} defaultValue={singlefoodData?.foodimage} />
                     </div>
 
                     <div className="grid">

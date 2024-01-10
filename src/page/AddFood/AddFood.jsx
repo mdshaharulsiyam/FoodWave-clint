@@ -5,6 +5,7 @@ import { useQuery, useMutation, useQueryClient, QueryClient, QueryClientProvider
 import Swal from 'sweetalert2';
 import { FoodWaveData } from '../../Context/Context';
 import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
+import axios from 'axios';
 const AddFood = () => {
     const { userinfo } = useContext(FoodWaveData)
     const [sendingData, setsendindData] = useState(false)
@@ -34,25 +35,41 @@ const AddFood = () => {
         },
     })
     //   get form data 
-    const formSubmit = (data) => {
-        setsendindData(true)
-        const { date} = data
-        console.log(data)
-        const insertedDate = new Date(date);       
+    const formSubmit = async (data) => {
+        // setsendindData(true)
+        const { date } = data
+        // console.log(data)
+        const insertedDate = new Date(date);
         const year = insertedDate.getUTCFullYear();
         const month = (insertedDate.getUTCMonth() + 1).toString().padStart(2, "0");
         const day = insertedDate.getUTCDate().toString().padStart(2, "0");
         const formattedDate = `${year}-${month}-${day}`;
-        const newData = {
-            ...data,
-            'userephoto': userinfo?.photoURL,
-            'useremail': userinfo?.email,
-            'username': userinfo?.displayName,
-            'date': formattedDate,
-            'status' : 'avaulable'
+        const res = await axios.post("https://api.imgbb.com/1/upload?key=5201d474546c521dc75dd9c96eea7a84", { image: data.foodimage[0] }, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        })
+        if (res.data.success) {
+            data.foodimage = res.data.data.display_url
+            const newData = {
+                ...data,
+                'userephoto': userinfo?.photoURL,
+                'useremail': userinfo?.email,
+                'username': userinfo?.displayName,
+                'date': formattedDate,
+                'status': 'avaulable'
 
-        }
+            }
             mutation.mutate(newData);
+        } else {
+            Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: "Something went wrong!",
+                footer: 'unable to upload food image'
+              });
+        }
+
     }
 
     return (
@@ -104,7 +121,7 @@ const AddFood = () => {
 
                     <div className="mb-4">
                         <label htmlFor="location">image url</label>
-                        <input className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage", { required: 'plese sellect food name', })} placeholder="food image url" />
+                        <input type='file' className='py-3 px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400' {...register("foodimage", { required: 'plese sellect food name', })} placeholder="food image url" />
                     </div>
                     <div className="mb-4">
                         <label htmlFor="location">Additional Notes</label>

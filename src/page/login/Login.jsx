@@ -49,7 +49,29 @@ const Login = () => {
         passwordField.type = passwordField.type === 'password' ? 'text' : 'password';
         setShowBtn(!showbutton);
     };
-
+    const loggindemouser = () => {
+        setloading(true);
+        loginUser('user1@gmail.com', 'User1@gmail.com')
+            .then((userCredential) => {
+                const user = userCredential.user;
+                Swal.fire({
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Logged in successfully',
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                setloading(false);
+                setuserupdate(!userupdate);
+                navigate('/');
+            })
+            .catch((error) => {
+                const errorMessage = error.message;
+                Swal.fire('Oops!', `${errorMessage}`, 'error');
+                setloading(false);
+            });
+        ///User!@gmail.com
+    }
     const formSubmit = (e) => {
         e.preventDefault();
         setloading(true);
@@ -76,7 +98,6 @@ const Login = () => {
                 setloading(false);
             });
     };
-
     if (userinfo?.displayName) {
         Swal.fire({
             position: 'top-end',
@@ -102,6 +123,7 @@ const Login = () => {
                         <div className="w-20 h-20 border-4 border-dashed rounded-full opacity-100 border-emerald-600 animate-spin dark:border-violet-400 "></div>
                     </span>
                 )}
+                <button className='mx-auto block bg-red-600 text-white font-bold px-8 py-2 rounded active:scale-90 hover:bg-red-300 hover:text-black transition-all' onClick={loggindemouser}>demo user</button>
                 <div className="container mx-auto max-w-3xl">
                     <h4 className="text-3xl text-gray-800 font-bold md:text-4xl md:leading-tight lg:text-5xl lg:leading-tight dark:text-gray-200">
                         Ready to Dive In? <span className="text-blue-600 dark:text-blue-500">LogIn</span> Here!

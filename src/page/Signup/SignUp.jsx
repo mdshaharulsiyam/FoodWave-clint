@@ -6,6 +6,7 @@ import useAxiosConfig from '../../CustomHooks/useAxiosConfig';
 import { FoodWaveData } from '../../Context/Context';
 import { updateProfile } from "firebase/auth";
 import { Helmet } from 'react-helmet';
+import axios from 'axios';
 const SignUp = () => {
     const [showbutton, setShowBtn] = useState(true)
     //context data 
@@ -26,14 +27,25 @@ const SignUp = () => {
             }
         }
 
-        const formSubmit = e => {
+        const formSubmit = async (e) => {
             setloading(true)
             let error = [];
             e.preventDefault();
             const password = e.target.password.value;
             const email = e.target.email.value;
             const username = e.target.username.value;
-            const profile = e.target.profile.value;
+            const picture = e.target.profile.files[0];
+            let profile;
+            const res = await axios.post("https://api.imgbb.com/1/upload?key=5201d474546c521dc75dd9c96eea7a84", { image: picture }, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            })
+            if (res.data.success) {
+                profile = res.data.data.display_url
+            }else{
+                error = [...error, 'unable to upload profile picture please try again letter']
+            }
             const passwordLength = /.{6,}/;
             const specialCharacter = /[-’/`~!#*$@_%+=.,^&(){}[\]|;:”<>?\\]/g;
             const uppercase = /[A-Z]/;
@@ -130,7 +142,7 @@ const SignUp = () => {
 
                         <div className="mb-4">
                             <label for="hs-hero-password-2" className="block text-sm font-medium dark:text-white relative"><span className="sr-only">profile pic url</span>
-                                <input type="text" name='profile' id="hs-hero-password-2" className="py-3 font-sans px-4 block w-full border-gray-200 rounded-md text-sm focus:border-blue-500 focus:ring-blue-500 sm:p-4 dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400" placeholder="profile pic url" required />
+                                <input type="file" name='profile' id="hs-hero-password-2" className="file-input w-full max-w-xs" placeholder="profile pic url" required />
                             </label>
                         </div>
                         <div className="grid">
