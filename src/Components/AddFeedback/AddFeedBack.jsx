@@ -68,7 +68,7 @@ const AddFeedBack = () => {
                     <h3 className='text-2xl font-bold pb-2'>send your feedback</h3>
                     <form onSubmit={sendfeedback}>
                         <div className="relative inline-block ">
-                            <textarea id="hs-textarea-ex-1" name='feedback' className="p-4 pb-12 w-full md:w-[400px] lg:w-[500px] border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none dark:bg-slate-900 dark:border-gray-700 dark:text-gray-400 dark:focus:ring-gray-600" placeholder="write your feedback"></textarea>
+                            <textarea id="hs-textarea-ex-1" name='feedback' className="p-4 pb-12 w-full md:w-[400px] lg:w-[500px] border-gray-200 rounded-lg text-sm focus:border-blue-500 focus:ring-blue-500 disabled:opacity-50 disabled:pointer-events-none " placeholder="write your feedback"></textarea>
                             <button className='p-2 hover:scale-110 active:scale-95 text-2xl absolute right-0 bottom-1'><BsSendFill></BsSendFill></button>
                         </div>
                     </form>

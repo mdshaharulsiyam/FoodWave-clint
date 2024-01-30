@@ -16,11 +16,17 @@
 #### replace with your won key
 ######firebase authentication key
 **VITE_apiKey**= your key
+
 **VITE_authDomain**=your key
+
 **VITE_projectId**=your key
+
 **VITE_storageBucket**=your key
+
 **VITE_messagingSenderId**=your key
+
 **VITE_appId**=your key
+
 ###### imgbb api key
 **VITE_IMAGE_API_KEY**=your key
 
